@@ -11,6 +11,8 @@
 
 ## 1. Executive Summary & Bakgrunn
 
+![Kristiansand EPM Workflow Architecture](docs/epm_workflow_diagram.png)
+
 Dette repositoriet implementerer **Antigravity EPM Framework** for proaktiv økonomistyring i **Kristiansand kommune**. 
 
 Løsningen transformerer kommunal virksomhetsstyring fra tradisjonell, tilbakeskuende tertialrapportering (reaktiv kontroll) til en **kontinuerlig, agentbasert tidligvarsling og beslutningsstøtte (60–90 dager før tertialslutt)**, forankret i to representative kommunale enheter:
@@ -130,6 +132,8 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 │   └── Komskole.csv            # Mevold Grunnskole / Åseral (194 rader)
 ├── docs/                       # Saksfremlegg, rammeverk og referansedokumenter
 │   ├── antigravity_usecase_epm.md      # Full teknisk og forretningsmessig spesifikasjon
+│   ├── epm_full_workflow_documentation.md # End-to-end arkitekturdokumentasjon for EPM AI-agentene
+│   ├── epm_workflow_diagram.png        # Visuelt arbeidsflytdiagram for Kristiansand EPM
 │   ├── saksfremlegg_epm_okonomidirektor.docx
 │   ├── use_case_kristiansand_kommune-v4.docx
 │   └── references/             # Kommunale styringsdokumenter og økonomiplan
@@ -142,12 +146,15 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 │   ├── 01_PowerQuery_M_Code.pq         # Power Query ETL (CSV & SQLite kilder)
 │   ├── 02_DAX_Measures_Library.dax     # YTD, EOY Prognose, Turnus- og Tufte-mål
 │   ├── 03_PowerBI_Model_Architecture.md# Relasjonsguide, RLS & Rapportdesign
+│   ├── fxOpenAI_RAG.m                  # Power Query M-funksjon for OpenAI RAG-integrasjon
 │   ├── generate_excel_powerbi_model.py # Generator for konsolidert arbeidsbok
 │   └── Kristiansand_EPM_PowerBI_Model.xlsx # Fullstendig modell for direkte Power BI import
 ├── src/                        # Operativ Python-kildekode
 │   ├── build_golden_record.py  # Hoved-ETL (100 % Python Standard Library)
 │   ├── build_excel_epm_model.py# Generator for master Excel EPM-modell
-│   └── epm_agentic_pipeline.py # Multi-agent orkestrering & HITL-logging
+│   ├── epm_agentic_pipeline.py # Multi-agent orkestrering & HITL-logging
+│   └── hitl_writeback_ui.py    # Streamlit Human-in-the-Loop Web-UI med SQLite writeback
+├── hitl_writeback_ui.py        # Snarvei for Streamlit HITL Portal i rotkatalog
 ├── Kristiansand_EPM_Excel_Modell.xlsx # Standalone master Excel-modell med dashboards & Tufte-styling
 ├── .gitignore
 ├── requirements.txt
@@ -173,6 +180,12 @@ Dette etablerer `kristiansand_golden_record.db` med stjernemodellen, konsolidere
 python src/epm_agentic_pipeline.py
 ```
 Dette kjører en simulert multi-agent-analyse, oppdager overtidssveksten i boenheten, foreslår korrigerende tiltak, og logger godkjenningen i `Audit_AI_Actions`.
+
+### 3. Start Human-in-the-Loop (HITL) Web-grensesnitt
+```bash
+streamlit run hitl_writeback_ui.py
+```
+Starter det interaktive webpanelet for enhetsledere og controllere. Her kan man inspisere AI-genererte avviksanalyser, overstyre eller godkjenne foreslåtte tiltak (f.eks. omdisponering av vikarbudsjett), og utføre direkte writeback til `Audit_AI_Actions`-revisjonssporet i SQLite-databasen med fullt etisk og juridisk sporingsvern (EU AI Act Compliance).
 
 ---
 
