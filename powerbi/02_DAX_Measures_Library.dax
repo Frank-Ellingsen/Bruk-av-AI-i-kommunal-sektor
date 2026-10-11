@@ -1,0 +1,183 @@
+// ==============================================================================
+// KRISTIANSAND KOMMUNE - DAX MEASURES LIBRARY FOR POWER BI
+// ==============================================================================
+// Implementerer beregninger i henhold til antigravity_usecase_epm.md,
+// Edward Tuftes Data-Ink standarder og Kommunelovens § 14-5.
+// Opprettes i en dedikert tabell: '_Measures'
+// ==============================================================================
+
+// ------------------------------------------------------------------------------
+// 1. KJERNE REGNSKAP- OG BUDSJETTMÅL
+// ------------------------------------------------------------------------------
+
+[Regnskap YTD] = 
+CALCULATE(
+    SUM(Fact_Regnskap[Regnskap]),
+    Dim_Dato[maned] <= 8
+)
+/* Beskrivelse: Akkumulert faktisk bokført regnskap YTD (per T2 / august). */
+
+
+[Budsjett YTD] = 
+CALCULATE(
+    SUM(Fact_Regnskap[Budsjett]),
+    Dim_Dato[maned] <= 8
+)
+/* Beskrivelse: Akkumulert periodisert budsjett YTD (per T2 / august). */
+
+
+[Avvik YTD] = 
+[Regnskap YTD] - [Budsjett YTD]
+/* Beskrivelse: Avvik i kroner. Positiv verdi = Merforbruk (sprekk). Negativ verdi = Mindreforbruk. */
+
+
+[Avvik YTD %] = 
+DIVIDE([Avvik YTD], [Budsjett YTD], 0)
+/* Format: Prosent (0.0 %) */
+
+
+[Merforbruk YTD] = 
+IF([Avvik YTD] > 0, [Avvik YTD], 0)
+/* Format: Valuta (#,##0 kr) */
+
+
+[Mindreforbruk YTD] = 
+IF([Avvik YTD] < 0, ABS([Avvik YTD]), 0)
+/* Format: Valuta (#,##0 kr) */
+
+
+// ------------------------------------------------------------------------------
+// 2. PREDICTIVE RE-FORECASTING (RULLENDE EOY-PROGNOSE)
+// ------------------------------------------------------------------------------
+
+[Vedtatt Årsbudsjett] = 
+CALCULATE(
+    SUM(Fact_Regnskap[Budsjett]),
+    ALL(Dim_Dato[tertial], Dim_Dato[manedsnavn], Dim_Dato[maned], Dim_Dato[ar_maned])
+)
+/* Beskrivelse: Kommunestyrets/Bystyrets totalt vedtatte årsramme. */
+
+
+[Budsjett Gjenstående] = 
+CALCULATE(
+    SUM(Fact_Regnskap[Budsjett]),
+    Dim_Dato[maned] > 8
+)
+/* Beskrivelse: Gjenstående periodisert budsjett for T3 (september-desember). */
+
+
+[Trendjustert Merforbruk] = 
+VAR Avvik = [Avvik YTD]
+RETURN
+    IF(Avvik > 0, Avvik * 0.50, 0)
+/* Beskrivelse: Konservativ tapsavsetning (50 % av YTD merforbruk antas å vedvare ut året uten tiltak). */
+
+
+[EOY Rullende Prognose] = 
+[Regnskap YTD] + [Budsjett Gjenstående] + [Trendjustert Merforbruk]
+/* Beskrivelse: Forventet årsregnskap ved årsslutt (End of Year). */
+
+
+[EOY Forventet Årsavvik] = 
+[EOY Rullende Prognose] - [Vedtatt Årsbudsjett]
+/* Beskrivelse: Forventet årsavvik mot vedtatt ramme (Varslingsgrunnlag for Bystyret jf. § 14-5). */
+
+
+// ------------------------------------------------------------------------------
+// 3. DIAGNOSTISKE DRIFTS- OG PERSONALDREVNE MÅL
+// ------------------------------------------------------------------------------
+
+[Lønnskostnader YTD] = 
+CALCULATE(
+    [Regnskap YTD],
+    Fact_Regnskap[KOSTRA_Art] IN {"1010", "1020", "1030", "1040", "1050", "1090"}
+)
+
+[Lønnsandel %] = 
+DIVIDE([Lønnskostnader YTD], [Regnskap YTD], 0)
+
+[Overtidskostnader YTD] = 
+CALCULATE(
+    [Regnskap YTD],
+    Fact_Regnskap[KOSTRA_Art] = "1040"
+)
+
+[Overtidsandel %] = 
+DIVIDE([Overtidskostnader YTD], [Lønnskostnader YTD], 0)
+
+[Vikarbyrå Eksternt YTD] = 
+CALCULATE(
+    [Regnskap YTD],
+    Fact_Regnskap[Kontokode] = "127040"
+)
+
+[Sykevikarer YTD] = 
+CALCULATE(
+    [Regnskap YTD],
+    Fact_Regnskap[KOSTRA_Art] = "1020"
+)
+
+[Samlet Vikarbelastning YTD] = 
+[Sykevikarer YTD] + [Vikarbyrå Eksternt YTD]
+
+[Vikarandel av Lønn %] = 
+DIVIDE([Samlet Vikarbelastning YTD], [Lønnskostnader YTD], 0)
+
+[NAV Refusjoner Bokført YTD] = 
+CALCULATE(
+    SUM(Fact_Regnskap[Regnskap]),
+    Fact_Regnskap[KOSTRA_Art] = "1690"
+)
+
+
+// ------------------------------------------------------------------------------
+// 4. DYNAMISK HIERARKI- OG MATRISEVISNING (ISINSCOPE)
+// ------------------------------------------------------------------------------
+
+[Matrise Avvik Visning] = 
+SWITCH(
+    TRUE(),
+    ISINSCOPE(Fact_Regnskap[Kontonavn]), [Avvik YTD],
+    ISINSCOPE(Fact_Regnskap[KOSTRA_Art]), [Avvik YTD],
+    ISINSCOPE(Dim_Funksjon[funksjon_navn]), [Avvik YTD],
+    ISINSCOPE(Dim_Ansvar[ansvar_navn]), [Avvik YTD],
+    [Avvik YTD]
+)
+
+[Matrise Status Tekst] = 
+VAR Avvik = [Avvik YTD]
+VAR Pct = [Avvik YTD %]
+RETURN
+    SWITCH(
+        TRUE(),
+        Avvik > 100000 && Pct > 0.05, "Kritisk Merforbruk",
+        Avvik > 0, "Merforbruk",
+        Avvik < 0, "Mindreforbruk",
+        "I Balanse"
+    )
+
+
+// ------------------------------------------------------------------------------
+// 5. EDWARD TUFTE BETINGET FARGEFORMATERING
+// ------------------------------------------------------------------------------
+// Brukes i 'Conditional Formatting' -> 'Field value' for tekst og bakgrunn.
+// Ingen glorete regnbuefarger; dempede farger som fremhever reell risiko.
+
+[Tufte_Avvik_Farge_HEX] = 
+VAR Avvik = [Avvik YTD]
+VAR Pct = [Avvik YTD %]
+RETURN
+    SWITCH(
+        TRUE(),
+        // Aktiv avvikskritisk farge (Demped rød ved > 50 000 kr og > 3 %)
+        Avvik > 50000 && Pct > 0.03, "#C53030",
+        // Varsel / Amber ved gryende overforbruk
+        Avvik > 0, "#DD6B20",
+        // Nøytral / Dempet grå ved balanse eller mindreforbruk
+        "#2D3748"
+    )
+
+[Tufte_Bakgrunn_Kort_HEX] = 
+VAR Avvik = [Avvik YTD]
+RETURN
+    IF(Avvik > 50000, "#FFF5F5", "#FFFFFF")

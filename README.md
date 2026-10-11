@@ -138,6 +138,12 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 │       ├── okonomireglement-for-kristiansand-kommune.pdf
 │       ├── Nøkkeltall _Kristiansand_Kommune.pdf
 │       └── Rådgiver økonomistyring Kristiansand Kommune - arbeidsplassen.no.pdf
+├── powerbi/                    # Komplett Power BI & Excel Semantic Model-suite
+│   ├── 01_PowerQuery_M_Code.pq         # Power Query ETL (CSV & SQLite kilder)
+│   ├── 02_DAX_Measures_Library.dax     # YTD, EOY Prognose, Turnus- og Tufte-mål
+│   ├── 03_PowerBI_Model_Architecture.md# Relasjonsguide, RLS & Rapportdesign
+│   ├── generate_excel_powerbi_model.py # Generator for konsolidert arbeidsbok
+│   └── Kristiansand_EPM_PowerBI_Model.xlsx # Fullstendig modell for direkte Power BI import
 ├── src/                        # Operativ Python-kildekode
 │   ├── build_golden_record.py  # Hoved-ETL (100 % Python Standard Library)
 │   └── epm_agentic_pipeline.py # Multi-agent orkestrering & HITL-logging
