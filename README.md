@@ -69,7 +69,7 @@ erDiagram
 
 ## 3. Spesialiserte EPM AI-Agenter
 
-Arkitekturen drives av 6 spesialiserte AI-agenter (beskrevet i [`agents/`](agents/)):
+Arkitekturen drives av 8 spesialiserte AI-agenter (beskrevet i [`agents/`](agents/)):
 
 | Agent | Rolle & Ansvarsområde | Nøkkelleveranse |
 | :--- | :--- | :--- |
@@ -79,6 +79,8 @@ Arkitekturen drives av 6 spesialiserte AI-agenter (beskrevet i [`agents/`](agent
 | **04. Prescriptive HITL Agent** | Utarbeider prioritert tiltaksmeny for enhetsledere | Tiltak A, B, C per case |
 | **05. Ethics & Governance Gatekeeper** | Sikrer samsvar med EU AI Act, Kommuneloven § 14-5 og HTA § 4 | Stage-Gate validering |
 | **06. Executive Ghostwriter** | Forfatter ferdige tertialrapporter og saksfremlegg (Tufte-stil) | Styringsnotater til bystyret |
+| **07. Excel & Power BI Expert** | FAST-standard, VertiPaq, Query Folding, Tufte Data-Ink og RLS | Enterprise modeller & Dashboards |
+| **08. Multi-Level Stakeholder** | 5-nivås kommunal styringspyramide (Enhetsleder $\rightarrow$ Bystyret) | Målgruppetilpassede rapporter |
 
 ---
 
@@ -114,13 +116,15 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 
 ```text
 .
-├── agents/                     # Spesifikasjoner for de 6 spesialiserte EPM AI-agentene
+├── agents/                     # Spesifikasjoner for de 8 spesialiserte EPM AI-agentene
 │   ├── 01_data_integration_etl_agent.md
 │   ├── 02_bi_dax_modeler_agent.md
 │   ├── 03_predictive_anomaly_agent.md
 │   ├── 04_prescriptive_hitl_agent.md
 │   ├── 05_ethics_governance_gatekeeper_agent.md
-│   └── 06_executive_report_ghostwriter_agent.md
+│   ├── 06_executive_report_ghostwriter_agent.md
+│   ├── 07_excel_powerbi_reporting_expert_agent.md
+│   └── 08_multilevel_stakeholder_reporting_agent.md
 ├── data/                       # Grunnlagsdata og normaliserte regnskapsfiler
 │   ├── BoMiljø.csv             # Slettheia Bofellesskap (1 056 rader, 12 mnd)
 │   └── Komskole.csv            # Mevold Grunnskole / Åseral (194 rader)
