@@ -146,7 +146,9 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 │   └── Kristiansand_EPM_PowerBI_Model.xlsx # Fullstendig modell for direkte Power BI import
 ├── src/                        # Operativ Python-kildekode
 │   ├── build_golden_record.py  # Hoved-ETL (100 % Python Standard Library)
+│   ├── build_excel_epm_model.py# Generator for master Excel EPM-modell
 │   └── epm_agentic_pipeline.py # Multi-agent orkestrering & HITL-logging
+├── Kristiansand_EPM_Excel_Modell.xlsx # Standalone master Excel-modell med dashboards & Tufte-styling
 ├── .gitignore
 ├── requirements.txt
 └── README.md
