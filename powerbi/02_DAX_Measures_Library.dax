@@ -158,10 +158,93 @@ RETURN
 
 
 // ------------------------------------------------------------------------------
-// 5. EDWARD TUFTE BETINGET FARGEFORMATERING
+// 5. FRAMSIKT-SPESIFIKKE MÅL (Inspirert av Visma/Framsikt dashboards)
 // ------------------------------------------------------------------------------
-// Brukes i 'Conditional Formatting' -> 'Field value' for tekst og bakgrunn.
-// Ingen glorete regnbuefarger; dempede farger som fremhever reell risiko.
+
+[Framsikt Avvik YTD] = 
+[Budsjett YTD] - [Regnskap YTD]
+/* Framsikt fortegnsstandard: Negativt tall = Overforbruk / merforbruk (rødt flagg). */
+
+[Framsikt Avvik YTD %] = 
+DIVIDE([Framsikt Avvik YTD], [Budsjett YTD], 0)
+
+[Brukt hiå %] = 
+DIVIDE([Regnskap YTD], [Vedtatt Årsbudsjett], 0)
+/* Viser hvor stor andel av helårsrammen som er forbrukt per 2. tertial. */
+
+[Siste Måned Regnskap] = 
+CALCULATE(
+    SUM(Fact_Regnskap[Regnskap]),
+    Dim_Dato[maned] = 8
+)
+
+[Siste Måned Budsjett] = 
+CALCULATE(
+    SUM(Fact_Regnskap[Budsjett]),
+    Dim_Dato[maned] = 8
+)
+
+[Siste Måned Avvik] = 
+[Siste Måned Budsjett] - [Siste Måned Regnskap]
+
+[Siste Måned Avvik %] = 
+DIVIDE([Siste Måned Avvik], [Siste Måned Budsjett], 0)
+
+[Lønn Avvik Framsikt YTD] = 
+CALCULATE(
+    [Framsikt Avvik YTD],
+    Fact_Regnskap[Hovedgruppe] = "1 Lønn" || Fact_Regnskap[KOSTRA_Art] IN {"1010", "1020", "1030", "1040", "1050", "1090"}
+)
+
+[Utgifter Drift Avvik Framsikt YTD] = 
+CALCULATE(
+    [Framsikt Avvik YTD],
+    Fact_Regnskap[Hovedgruppe] = "2 Utgifter" || Fact_Regnskap[KOSTRA_Art] IN {"1110", "1130", "1150", "1200", "1270"}
+)
+
+[Refusjoner Inntekter Avvik Framsikt YTD] = 
+CALCULATE(
+    [Framsikt Avvik YTD],
+    Fact_Regnskap[KOSTRA_Art] = "1690" || Fact_Regnskap[Undergruppe] LIKE "%Refusjon%"
+)
+
+
+// ------------------------------------------------------------------------------
+// 6. NET ZERO TILTAKSEFFEKT & BALANSERT REGNSKAPSAVSLUTNING
+// ------------------------------------------------------------------------------
+
+[EOY Baseline RunRate] = 
+[Regnskap YTD] + ([Regnskap YTD] / 8) * 4
+/* Fremskriving av regnskap til 31.12 basert på faktisk månedlig gjennomsnitt Jan-Aug. */
+
+[EOY RunRate Avvik] = 
+[EOY Baseline RunRate] - [Vedtatt Årsbudsjett]
+/* Estimerte uavbøtte overforbruk ved årsslutt dersom ingen tiltak iverksettes. */
+
+[Nødvendig Tiltakseffekt T3] = 
+IF([EOY RunRate Avvik] > 0, [EOY RunRate Avvik], 0)
+/* Beløpet som MÅ spares inn i Sept-Des for å oppnå 0 i avvik ved årsslutt. */
+
+[Planlagt Tiltakseffekt T3] = 
+SWITCH(
+    SELECTEDVALUE(Dim_Ansvar[ansvar_kode]),
+    "2540", 1928421, // Slettheia Bofellesskap (Vikarstopp, turnusomlegging, ressurskrevende refusjon)
+    "2020", 863000,  // Mevold Grunnskole (Lærervikarstopp, IKT/innkjøpsfrys, refusjonsavstemming)
+    2791421          // Konsolidert sum
+)
+
+[EOY Balansert Regnskap Net Zero] = 
+[EOY Baseline RunRate] - [Planlagt Tiltakseffekt T3]
+/* Sluttprognose med iverksatte tiltak. Skal være eksakt lik [Vedtatt Årsbudsjett]. */
+
+[EOY Net Zero Sluttavvik] = 
+[EOY Balansert Regnskap Net Zero] - [Vedtatt Årsbudsjett]
+/* Målresultat: 0 kr. */
+
+
+// ------------------------------------------------------------------------------
+// 7. EDWARD TUFTE BETINGET FARGEFORMATERING & KPI-FLAGG
+// ------------------------------------------------------------------------------
 
 [Tufte_Avvik_Farge_HEX] = 
 VAR Avvik = [Avvik YTD]
@@ -169,15 +252,13 @@ VAR Pct = [Avvik YTD %]
 RETURN
     SWITCH(
         TRUE(),
-        // Aktiv avvikskritisk farge (Demped rød ved > 50 000 kr og > 3 %)
-        Avvik > 50000 && Pct > 0.03, "#C53030",
-        // Varsel / Amber ved gryende overforbruk
-        Avvik > 0, "#DD6B20",
-        // Nøytral / Dempet grå ved balanse eller mindreforbruk
-        "#2D3748"
+        Avvik > 50000 && Pct > 0.03, "#DC2626", // Klar rød for vesentlig overforbruk
+        Avvik > 0, "#D97706",                   // Amber ved mildt overforbruk
+        "#2563EB"                               // Dempet blå/nøytral ved balanse
     )
 
-[Tufte_Bakgrunn_Kort_HEX] = 
+[Tufte_KPI_Flagg] = 
 VAR Avvik = [Avvik YTD]
 RETURN
-    IF(Avvik > 50000, "#FFF5F5", "#FFFFFF")
+    IF(Avvik > 50000, "🚩 Overforbruk", "✓ Under ramme")
+

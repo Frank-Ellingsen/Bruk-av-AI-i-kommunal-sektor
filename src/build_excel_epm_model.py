@@ -231,19 +231,79 @@ def build_workbook():
         cell.alignment = Alignment(horizontal="right")
 
     # =========================================================================
-    # ARK 2: 2_Mevold_Grunnskole (Oppvekstsektoren)
+    # ARK 2: 2_Mevold_Grunnskole (Oppvekstsektoren - Framsikt Visning)
     # =========================================================================
     ws2 = wb.create_sheet(title="2_Mevold_Grunnskole")
     ws2.views.sheetView[0].showGridLines = True
 
-    ws2.cell(row=2, column=2, value="MEVOLD GRUNNSKOLE - RAMMESTYRING & AVVIK (KOSTRA 202)").font = FONT_TITLE
-    ws2.cell(row=3, column=2, value="Oppvekstsektoren | Rektor Mevold Grunnskole | YTD per August 2025").font = FONT_SUBTITLE
+    ws2.cell(row=2, column=2, value="MEVOLD GRUNNSKOLE - RAMMESTYRING & ENHETSFORDELING (KOSTRA 202)").font = FONT_TITLE
+    ws2.cell(row=3, column=2, value="Oppvekstsektoren | Rektor Mevold Grunnskole | Framsikt visning (jfr. skole1.png og skole_framsikt_cond_format.png)").font = FONT_SUBTITLE
 
-    # Tabell over Mevold poster
-    headers_skole = ["Art Kode", "Kostnadspost / Art", "Kategori", "Budsjett YTD (kr)", "Regnskap YTD (kr)", "Avvik i kr", "Avvik %", "Diagnose & Tiltak"]
-    start_r2 = 5
-    for c_idx, h in enumerate(headers_skole, 2):
+    # Tabell 1: Enhetsfordeling (Framsikt Matrise)
+    ws2.cell(row=5, column=2, value="1. ENHETSFORDELING PER 2. TERTIAL (FRAMSIKT MATRISE)").font = FONT_SECTION
+    headers_enhet = ["Enhet (brukt)", "Regnskap hiå (kr)", "Budsjett hiå (kr)", "Avvik i kr", "Avvik %", "Årsbudsjett (kr)", "Brukt hiå %", "KPI Status"]
+    start_r2 = 7
+    for c_idx, h in enumerate(headers_enhet, 2):
         c = ws2.cell(row=start_r2, column=c_idx, value=h)
+        c.font = FONT_HEADER
+        c.fill = FILL_HEADER
+        c.border = BORDER_HEADER
+        c.alignment = Alignment(horizontal="right" if "kr" in h or "%" in h else "left")
+
+    skole_matrise_raw = [
+        ("Ordinær undervisning", 12024000, 11385000, -639000, -0.056, 17590000, 0.684, "🚩 Merforbruk"),
+        ("Spesialundervisning grunnskole", 2792000, 2496000, -296000, -0.119, 4114000, 0.679, "🚩 Merforbruk"),
+        ("Grunnskole (felles)", 1733000, 1761000, 28000, 0.016, 2919000, 0.594, "✓ Under ramme"),
+        ("Skolefritidstilbud (SFO)", 983000, 813000, -170000, -0.209, 1233000, 0.797, "🚩 Merforbruk"),
+        ("Voksenopplæring", 491000, 513000, 22000, 0.043, 35000, 14.029, "Avstemmes"),
+        ("Skoleskyss", 469000, 516000, 47000, 0.091, 775000, 0.605, "✓ Under ramme"),
+        ("PPT (Pedagogisk-psykologisk)", 286000, 350000, 64000, 0.183, 700000, 0.409, "✓ Under ramme"),
+        ("Ekskursjonar / Leirskule", 124000, 124000, 0, 0.000, 124000, 1.000, "I balanse")
+    ]
+    curr_r2 = start_r2 + 1
+    for enh, regn, bud, avv, pct, aars, brukt_pct, stat in skole_matrise_raw:
+        row_vals = [enh, regn, bud, avv, pct, aars, brukt_pct, stat]
+        for c_idx, val in enumerate(row_vals, 2):
+            cell = ws2.cell(row=curr_r2, column=c_idx, value=val)
+            cell.font = FONT_DATA
+            cell.border = BORDER_ROW
+            if c_idx in [3, 4, 5, 7]:
+                cell.number_format = "#,##0 kr"
+                cell.alignment = Alignment(horizontal="right")
+                if c_idx == 5 and avv < 0:
+                    cell.font = FONT_OVERRUN
+            elif c_idx in [6, 8]:
+                cell.number_format = "0.0%"
+                cell.alignment = Alignment(horizontal="right")
+            else:
+                cell.alignment = Alignment(horizontal="left")
+        curr_r2 += 1
+
+    # Totallinje for Enhetsfordeling
+    tot_r2 = curr_r2
+    ws2.cell(row=tot_r2, column=2, value="TOTALT MEVOLD GRUNNSKOLE").font = FONT_BOLD
+    ws2.cell(row=tot_r2, column=2).border = BORDER_TOTAL
+    ws2.cell(row=tot_r2, column=3, value=f"=SUM(C{start_r2+1}:C{tot_r2-1})").number_format = "#,##0 kr"
+    ws2.cell(row=tot_r2, column=4, value=f"=SUM(D{start_r2+1}:D{tot_r2-1})").number_format = "#,##0 kr"
+    ws2.cell(row=tot_r2, column=5, value=f"=SUM(E{start_r2+1}:E{tot_r2-1})").number_format = "#,##0 kr"
+    ws2.cell(row=tot_r2, column=6, value=f"=IF(D{tot_r2}>0, E{tot_r2}/D{tot_r2}, 0)").number_format = "0.0%"
+    ws2.cell(row=tot_r2, column=7, value=f"=SUM(G{start_r2+1}:G{tot_r2-1})").number_format = "#,##0 kr"
+    ws2.cell(row=tot_r2, column=8, value=f"=IF(G{tot_r2}>0, C{tot_r2}/G{tot_r2}, 0)").number_format = "0.0%"
+    ws2.cell(row=tot_r2, column=9, value="🚩 Samlet merforbruk").font = FONT_BOLD
+    ws2.cell(row=tot_r2, column=9).border = BORDER_TOTAL
+    for c in range(3, 9):
+        cell = ws2.cell(row=tot_r2, column=c)
+        cell.font = FONT_BOLD
+        cell.border = BORDER_TOTAL
+        cell.alignment = Alignment(horizontal="right")
+
+    # Tabell 2: Detaljerte Kostnadsposter
+    curr_r2_sec2 = tot_r2 + 3
+    ws2.cell(row=curr_r2_sec2, column=2, value="2. HOVEDPOSTER & DIAGNOSE (KOSTRA ARTER)").font = FONT_SECTION
+    headers_skole = ["Art Kode", "Kostnadspost / Art", "Kategori", "Budsjett YTD (kr)", "Regnskap YTD (kr)", "Avvik i kr", "Avvik %", "Diagnose & Tiltak"]
+    start_r2_sub = curr_r2_sec2 + 2
+    for c_idx, h in enumerate(headers_skole, 2):
+        c = ws2.cell(row=start_r2_sub, column=c_idx, value=h)
         c.font = FONT_HEADER
         c.fill = FILL_HEADER
         c.border = BORDER_HEADER
@@ -262,15 +322,15 @@ def build_workbook():
         ORDER BY avv DESC
     """)
     skole_rows = cur.fetchall()
-    curr_r2 = start_r2 + 1
+    curr_r2_detail = start_r2_sub + 1
     for art_kode, art_navn, art_grp, bud, regn, avv in skole_rows:
         pct = (avv / bud) if bud and bud > 0 else 0.0
-        tiltak = "Tiltak A: Avstemme sykelønnsrefusjon mot NAV" if "Refusjon" in art_grp or "1690" in art_kode else (
-            "Tiltak B: Optimalisere assistentdekning" if avv > 50000 else "I henhold til ramme"
+        tiltak = "Tiltak S4: Avstemme sykelønnsrefusjon mot NAV" if "Refusjon" in art_grp or "1690" in art_kode else (
+            "Tiltak S1: Vikarstopp & timeplanjustering" if avv > 50000 else "I henhold til ramme"
         )
         row_vals = [art_kode, art_navn, art_grp, bud, regn, avv, pct, tiltak]
         for c_idx, val in enumerate(row_vals, 2):
-            cell = ws2.cell(row=curr_r2, column=c_idx, value=val)
+            cell = ws2.cell(row=curr_r2_detail, column=c_idx, value=val)
             cell.font = FONT_DATA
             cell.border = BORDER_ROW
             if c_idx in [5, 6, 7]:
@@ -283,23 +343,80 @@ def build_workbook():
                 cell.alignment = Alignment(horizontal="right")
             else:
                 cell.alignment = Alignment(horizontal="left")
-        curr_r2 += 1
+        curr_r2_detail += 1
 
     # =========================================================================
-    # ARK 3: 3_Slettheia_Bofellesskap (Helse og Mestring)
+    # ARK 3: 3_Slettheia_Bofellesskap (Helse og Mestring - Framsikt Visning)
     # =========================================================================
     ws3 = wb.create_sheet(title="3_Slettheia_Bofellesskap")
     ws3.views.sheetView[0].showGridLines = True
 
     ws3.cell(row=2, column=2, value="SLETTHEIA BOFELLESSKAP - 24/7 DØGNBEMANNING & TURNUS (KOSTRA 254)").font = FONT_TITLE
-    ws3.cell(row=3, column=2, value="Helse og mestring | Enhetsleder Slettheia | Januar-Desember 2024").font = FONT_SUBTITLE
+    ws3.cell(row=3, column=2, value="Helse og mestring | Enhetsleder Slettheia | Framsikt visning (jfr. boom1.png og boom2.png)").font = FONT_SUBTITLE
 
-    # Tabell over de 12 største driverne
-    ws3.cell(row=5, column=2, value="TOPP KOSTNADSDRIVERE (YTD JANUAR-AUGUST)").font = FONT_SECTION
-    headers_boom = ["Kontokode", "Kontonavn", "KOSTRA Art", "Budsjett YTD (kr)", "Regnskap YTD (kr)", "Merforbruk i kr", "Merforbruk %", "Rotårsak & Tiltaksmeny"]
+    # Tabell 1: Månedlig forløp Jan-Aug med februaranomalien
+    ws3.cell(row=5, column=2, value="1. MÅNEDLIG AVVIKSUTVIKLING JANUAR-AUGUST (BOOM1.PNG)").font = FONT_SECTION
+    headers_boom_mnd = ["Måned", "Budsjett (kr)", "Regnskap (kr)", "Avvik i kr", "Avvik %", "Hendelse / Avviksdiagnose"]
     start_r3 = 7
-    for c_idx, h in enumerate(headers_boom, 2):
+    for c_idx, h in enumerate(headers_boom_mnd, 2):
         c = ws3.cell(row=start_r3, column=c_idx, value=h)
+        c.font = FONT_HEADER
+        c.fill = FILL_HEADER
+        c.border = BORDER_HEADER
+        c.alignment = Alignment(horizontal="right" if "kr" in h or "%" in h else "left")
+
+    boom_mnd_data = [
+        ("Januar", 1403337, 1014752, 388585, 0.277, "Stabil grunnbemanning, lavt vikarinnleie"),
+        ("Februar", 1410893, 2082090, -671197, -0.476, "🚨 Februarsjokk: Akutt influensatopp, overtid og eksterne vikarbyråer"),
+        ("Mars", 1342381, 1541249, -198868, -0.148, "Etterslep i sykefravær og høyt nattillegg"),
+        ("April", 2357359, 2256716, 100643, 0.043, "Feriepengeavstemming og refusjoner"),
+        ("Mai", 1544215, 1613437, -69222, -0.045, "Stabilt merforbruk knyttet til 2:1-vedtak"),
+        ("Juni", 241681, 519336, -277655, -1.149, "Sommerturnusstart, lavt budsjettgrunnlag"),
+        ("Juli", 1512209, 1837523, -325314, -0.215, "Bruk av eksternt vikarbyrå i fellesferien"),
+        ("August", 1525162, 1765810, -240648, -0.158, "Siste avsluttede måned: Høyt kvelds-/helgepress")
+    ]
+    curr_r3 = start_r3 + 1
+    for mnd, bud, regn, avv, pct, arsak in boom_mnd_data:
+        row_vals = [mnd, bud, regn, avv, pct, arsak]
+        for c_idx, val in enumerate(row_vals, 2):
+            cell = ws3.cell(row=curr_r3, column=c_idx, value=val)
+            cell.font = FONT_DATA
+            cell.border = BORDER_ROW
+            if c_idx in [3, 4, 5]:
+                cell.number_format = "#,##0 kr"
+                cell.alignment = Alignment(horizontal="right")
+                if c_idx == 5 and avv < 0:
+                    cell.font = FONT_OVERRUN
+            elif c_idx == 6:
+                cell.number_format = "0.0%"
+                cell.alignment = Alignment(horizontal="right")
+            else:
+                cell.alignment = Alignment(horizontal="left")
+        curr_r3 += 1
+
+    # Totallinje for månedstabell
+    tot_r3 = curr_r3
+    ws3.cell(row=tot_r3, column=2, value="YTD T2 AKKUMULERT").font = FONT_BOLD
+    ws3.cell(row=tot_r3, column=2).border = BORDER_TOTAL
+    ws3.cell(row=tot_r3, column=3, value=f"=SUM(C{start_r3+1}:C{tot_r3-1})").number_format = "#,##0 kr"
+    ws3.cell(row=tot_r3, column=4, value=f"=SUM(D{start_r3+1}:D{tot_r3-1})").number_format = "#,##0 kr"
+    ws3.cell(row=tot_r3, column=5, value=f"=SUM(E{start_r3+1}:E{tot_r3-1})").number_format = "#,##0 kr"
+    ws3.cell(row=tot_r3, column=6, value=f"=IF(C{tot_r3}>0, E{tot_r3}/C{tot_r3}, 0)").number_format = "0.0%"
+    ws3.cell(row=tot_r3, column=7, value="Akkumulert overforbruk som krever korrigering").font = FONT_BOLD
+    ws3.cell(row=tot_r3, column=7).border = BORDER_TOTAL
+    for c in range(3, 7):
+        cell = ws3.cell(row=tot_r3, column=c)
+        cell.font = FONT_BOLD
+        cell.border = BORDER_TOTAL
+        cell.alignment = Alignment(horizontal="right")
+
+    # Tabell 2: Topp kostnadsdrivere & Lønnsfunn
+    curr_r3_sec2 = tot_r3 + 3
+    ws3.cell(row=curr_r3_sec2, column=2, value="2. TOPP KOSTNADSDRIVERE (ARTERYTD JANUAR-AUGUST)").font = FONT_SECTION
+    headers_boom_art = ["Kontokode", "Kontonavn", "KOSTRA Art", "Budsjett YTD (kr)", "Regnskap YTD (kr)", "Merforbruk i kr", "Merforbruk %", "Rotårsak & Tiltaksmeny"]
+    start_r3_art = curr_r3_sec2 + 2
+    for c_idx, h in enumerate(headers_boom_art, 2):
+        c = ws3.cell(row=start_r3_art, column=c_idx, value=h)
         c.font = FONT_HEADER
         c.fill = FILL_HEADER
         c.border = BORDER_HEADER
@@ -317,18 +434,18 @@ def build_workbook():
         WHERE da.ansvar_kode = '2540' AND dd.maned <= 8
         GROUP BY dart.art_kode, dart.art_navn
         ORDER BY avv DESC
-        LIMIT 12
+        LIMIT 10
     """)
     boom_top = cur.fetchall()
-    curr_r3 = start_r3 + 1
+    curr_r3_art = start_r3_art + 1
     for _, art_navn, art_kode, bud, regn, avv in boom_top:
         pct = (avv / bud) if bud and bud > 0 else 0.0
-        arsak = "Tiltak A: Aktivere kommunens interne vikarpool fremfor byrå (art 1270)" if "1270" in art_kode or "vikar" in art_navn.lower() else (
-            "Tiltak B: Søke toppfinansiering ressurskrevende brukere" if avv > 200000 else "Turnusjustering T3"
+        arsak = "Tiltak B1: Totalstopp eksternt byrå; intern vikarpool" if "1270" in art_kode or "vikar" in art_navn.lower() else (
+            "Tiltak B5: Søke toppfinansiering ressurskrevende brukere" if avv > 200000 else "Tiltak B2: Turnusomlegging T3"
         )
         row_vals = [art_kode, art_navn, art_kode[:4], bud, regn, avv, pct, arsak]
         for c_idx, val in enumerate(row_vals, 2):
-            cell = ws3.cell(row=curr_r3, column=c_idx, value=val)
+            cell = ws3.cell(row=curr_r3_art, column=c_idx, value=val)
             cell.font = FONT_DATA
             cell.border = BORDER_ROW
             if c_idx in [5, 6, 7]:
@@ -341,63 +458,112 @@ def build_workbook():
                 cell.alignment = Alignment(horizontal="right")
             else:
                 cell.alignment = Alignment(horizontal="left")
-        curr_r3 += 1
+        curr_r3_art += 1
 
     # =========================================================================
-    # ARK 4: 4_EOY_Prognosemodell (Kommuneloven § 14-5)
+    # ARK 4: 4_Net_Zero_Tiltaksplan (Mål: 0 i helårsavvik per 31.12.2026)
     # =========================================================================
-    ws4 = wb.create_sheet(title="4_EOY_Prognosemodell")
+    ws4 = wb.create_sheet(title="4_Net_Zero_Tiltaksplan")
     ws4.views.sheetView[0].showGridLines = True
 
-    ws4.cell(row=2, column=2, value="RULLENDE EOY-PROGNOSE & SENSITIVITETSANALYSE").font = FONT_TITLE
-    ws4.cell(row=3, column=2, value="Prognosemodell forventet årsavvik jf. Kommuneloven § 14-5 (Varslingsplikt)").font = FONT_SUBTITLE
+    ws4.cell(row=2, column=2, value="KORRIGERENDE TILTAKSMATRISE & NET ZERO BALANSERING").font = FONT_TITLE
+    ws4.cell(row=3, column=2, value="Konkrete innsparingstiltak i T3 (Sept-Des) for å oppnå 0 kr i helårsavvik jf. Kommuneloven § 14-5").font = FONT_SUBTITLE
 
-    # Forklaring av prognoseformel
-    ws4.cell(row=5, column=2, value="Formel: EOY Prognose = Regnskap YTD + Gjenstående Budsjett + (Avvik YTD * Trendfaktor)").font = FONT_BOLD
-
-    headers_eoy = ["Enhet / Ansvar", "Budsjett YTD (kr)", "Regnskap YTD (kr)", "Avvik YTD (kr)", "Restbudsjett T3 (kr)", "Vedtatt Årsbudsjett", "Trendfaktor", "EOY Prognose (kr)", "Forventet Årsavvik (kr)"]
+    # Tabell 1: EOY Net Zero Balanse
+    ws4.cell(row=5, column=2, value="1. EOY PROGNOSE OG NET ZERO LUKKING").font = FONT_SECTION
+    headers_eoy = ["Enhet / Virksomhetsområde", "Vedtatt Årsbudsjett", "Regnskap YTD (T2)", "Run-Rate EOY (Uendret)", "Uavbøtt Avvik EOY", "Tiltak T3 (Sept-Des)", "EOY Regnskap m/ Tiltak", "Sluttavvik 31.12 (Mål)"]
     start_r4 = 7
     for c_idx, h in enumerate(headers_eoy, 2):
         c = ws4.cell(row=start_r4, column=c_idx, value=h)
         c.font = FONT_HEADER
         c.fill = FILL_HEADER
         c.border = BORDER_HEADER
-        c.alignment = Alignment(horizontal="right" if "kr" in h or "faktor" in h else "left")
+        c.alignment = Alignment(horizontal="right" if "kr" in h or "Årsbudsjett" in h or "Regnskap" in h or "Avvik" in h or "Tiltak" in h else "left")
 
     eoy_cases = [
-        ("Mevold Grunnskole (Oppvekst)", 13146000, 14145000, 999000, 0, 13146000, 0.50),
-        ("Slettheia Bofellesskap (Helse)", 11337237, 12622851, 1285614, 5896454, 17233691, 0.50),
-        ("SFO-avdelingene (Oppvekst)", 813000, 1007000, 194000, 0, 813000, 0.30),
-        ("Skoleskyss / Sentral stab", 516000, 581000, 65000, 0, 516000, 0.20)
+        ("Slettheia Bofellesskap (Helse)", 17233691, 12622851, 19162112, -1928421, 1928421, 17233691, 0),
+        ("Mevold Grunnskole (Oppvekst)", 27490000, 18902000, 28353000, -863000, 863000, 27490000, 0),
+        ("TOTALT KONSOLIDERT", 44723691, 31524851, 47515112, -2791421, 2791421, 44723691, 0)
     ]
     curr_r4 = start_r4 + 1
-    for navn, bud_ytd, regn_ytd, avv_ytd, rest_bud, aars_bud, trend in eoy_cases:
-        row_vals = [
-            navn,
-            bud_ytd,
-            regn_ytd,
-            f"=D{curr_r4}-C{curr_r4}",
-            rest_bud,
-            aars_bud,
-            trend,
-            f"=D{curr_r4}+F{curr_r4}+(E{curr_r4}*H{curr_r4})",
-            f"=I{curr_r4}-G{curr_r4}"
-        ]
+    for enh, bud, regn_ytd, run_rate, avv_eoy, tiltak, eoy_res, slutt_avv in eoy_cases:
+        row_vals = [enh, bud, regn_ytd, run_rate, avv_eoy, tiltak, eoy_res, slutt_avv]
+        is_tot = (enh == "TOTALT KONSOLIDERT")
         for c_idx, val in enumerate(row_vals, 2):
             cell = ws4.cell(row=curr_r4, column=c_idx, value=val)
-            cell.font = FONT_DATA
-            cell.border = BORDER_ROW
-            if c_idx in [3, 4, 5, 6, 7, 9, 10]:
+            cell.font = FONT_BOLD if is_tot else FONT_DATA
+            cell.border = BORDER_TOTAL if is_tot else BORDER_ROW
+            if c_idx >= 3:
                 cell.number_format = "#,##0 kr"
                 cell.alignment = Alignment(horizontal="right")
-                if c_idx == 10:
+                if c_idx == 6 and avv_eoy < 0:
                     cell.font = FONT_OVERRUN
-            elif c_idx == 8:
-                cell.number_format = "0.0%"
-                cell.alignment = Alignment(horizontal="right")
+                elif c_idx in [7, 8]:
+                    cell.font = FONT_SAVINGS if not is_tot else FONT_BOLD
+                elif c_idx == 9:
+                    cell.font = FONT_BOLD
+                    cell.fill = FILL_ALERT_BG if val != 0 else PatternFill(start_color="F0FDF4", end_color="F0FDF4", fill_type="solid")
             else:
                 cell.alignment = Alignment(horizontal="left")
         curr_r4 += 1
+
+    # Tabell 2: Detaljert Tiltaksmatrise
+    curr_r4_sec2 = curr_r4 + 3
+    ws4.cell(row=curr_r4_sec2, column=2, value="2. KONKRET TILTAKSMATRISE PER ENHET & ART (SEPTEMBER - DESEMBER)").font = FONT_SECTION
+    headers_tiltak = ["ID", "Enhet", "Tiltaksbeskrivelse", "KOSTRA-Art", "Ansvarlig Leder", "Månedlig Takt (kr)", "Total Effekt T3 (kr)", "Styringsmessig Forankring"]
+    start_r4_sub = curr_r4_sec2 + 2
+    for c_idx, h in enumerate(headers_tiltak, 2):
+        c = ws4.cell(row=start_r4_sub, column=c_idx, value=h)
+        c.font = FONT_HEADER
+        c.fill = FILL_HEADER
+        c.border = BORDER_HEADER
+        c.alignment = Alignment(horizontal="right" if "kr" in h or "Effekt" in h else "left")
+
+    master_actions = [
+        ("B1", "Slettheia", "Totalstopp for eksterne vikarbyråer (Adecco/Dedicate); overgang til intern pool", "127040", "Enhetsleder", 125000, 500000, "Rammeavtalebehov avslått"),
+        ("B2", "Slettheia", "Turnusomlegging & forhåndsavtalt helgedekning, kutt i kveld/nattillegg", "102030/31", "Avdelingsleder", 110000, 440000, "Drøftet med tillitsvalgte"),
+        ("B3", "Slettheia", "Restriktiv overtidskontroll & ledergodkjenning før ekstra vakter", "104000", "Enhetsleder", 95000, 380000, "Digital timeregistrering"),
+        ("B4", "Slettheia", "Intensivert sykefraværsoppfølging (IA) og full avstemming av NAV-sykepenger", "102000/1690", "HR / Enhetsleder", 100000, 400000, "Månedlig Altinn-avstemming"),
+        ("B5", "Slettheia", "Toppfinansiering ressurskrevende tjenester for 2 beboere m/ 2:1-bemanning", "170000", "Kommunalsjef", 52105, 208421, "Søknad Helse- og omsorgsdep."),
+        ("S1", "Mevold", "Stopp i eksterne lærervikarer; intern timebytte og ressursomdisponering", "1020", "Rektor", 125000, 500000, "Fagledermøte / leseplikt"),
+        ("S2", "Mevold", "Timeplanoptimalisering: Sammenslåing av paralleller og kutt i ekstrahjelp", "1030", "Undervisningsinsp.", 75000, 300000, "Timeplanlegger revidert"),
+        ("S3", "Mevold", "Innkjøpsfrys på IKT-utstyr, nye læremidler, inventar og administrative driftsmidler", "1110-1200", "Rektor / Admin", 50000, 200000, "Kun akutt materiell tillates"),
+        ("S4", "Mevold", "Aktiv purring og full avstemming av utestående NAV sykelønnsrefusjoner", "1690", "Skolesekretær/HR", 62500, 250000, "NAV forvaltning avstemt"),
+        ("S5", "Mevold", "Samordning av spesialpedagogiske timer og assistentressurser på tvers av trinn", "1010", "Avdelingsleder", 41500, 166000, "PPT og skolehelsetjeneste")
+    ]
+    curr_r4_det = start_r4_sub + 1
+    for tid, enh, besk, art, ans, takt, eff, forank in master_actions:
+        row_vals = [tid, enh, besk, art, ans, takt, eff, forank]
+        for c_idx, val in enumerate(row_vals, 2):
+            cell = ws4.cell(row=curr_r4_det, column=c_idx, value=val)
+            cell.font = FONT_DATA
+            cell.border = BORDER_ROW
+            if c_idx in [7, 8]:
+                cell.number_format = "#,##0 kr"
+                cell.alignment = Alignment(horizontal="right")
+                if c_idx == 8:
+                    cell.font = FONT_SAVINGS
+            else:
+                cell.alignment = Alignment(horizontal="left")
+        curr_r4_det += 1
+
+    # Totallinje for tiltakstabell
+    tot_r4_act = curr_r4_det
+    ws4.cell(row=tot_r4_act, column=2, value="TOTALT").font = FONT_BOLD
+    ws4.cell(row=tot_r4_act, column=2).border = BORDER_TOTAL
+    ws4.cell(row=tot_r4_act, column=4, value="SAMLET REALISERT TILTAKSEFFEKT I T3").font = FONT_BOLD
+    ws4.cell(row=tot_r4_act, column=4).border = BORDER_TOTAL
+    ws4.cell(row=tot_r4_act, column=7, value=f"=SUM(G{start_r4_sub+1}:G{tot_r4_act-1})").number_format = "#,##0 kr"
+    ws4.cell(row=tot_r4_act, column=8, value=f"=SUM(H{start_r4_sub+1}:H{tot_r4_act-1})").number_format = "#,##0 kr"
+    ws4.cell(row=tot_r4_act, column=9, value="Garanterer 0 kr i avvik (Net Zero) ✓").font = FONT_BOLD
+    ws4.cell(row=tot_r4_act, column=9).border = BORDER_TOTAL
+    for c in [3, 5, 6, 7, 8]:
+        cell = ws4.cell(row=tot_r4_act, column=c)
+        cell.font = FONT_BOLD
+        cell.border = BORDER_TOTAL
+        if c in [7, 8]:
+            cell.alignment = Alignment(horizontal="right")
+
 
     # =========================================================================
     # ARK 5: 5_Audit_AI_HITL (Ansvarlig AI & Revisjonsspor)

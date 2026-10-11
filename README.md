@@ -144,14 +144,23 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 │       └── Rådgiver økonomistyring Kristiansand Kommune - arbeidsplassen.no.pdf
 ├── powerbi/                    # Komplett Power BI & Excel Semantic Model-suite
 │   ├── 01_PowerQuery_M_Code.pq         # Power Query ETL (CSV & SQLite kilder)
-│   ├── 02_DAX_Measures_Library.dax     # YTD, EOY Prognose, Turnus- og Tufte-mål
+│   ├── 02_DAX_Measures_Library.dax     # YTD, EOY Prognose, Turnus- og Framsikt/Tufte-mål
 │   ├── 03_PowerBI_Model_Architecture.md# Relasjonsguide, RLS & Rapportdesign
 │   ├── fxOpenAI_RAG.m                  # Power Query M-funksjon for OpenAI RAG-integrasjon
 │   ├── generate_excel_powerbi_model.py # Generator for konsolidert arbeidsbok
 │   └── Kristiansand_EPM_PowerBI_Model.xlsx # Fullstendig modell for direkte Power BI import
+├── reports/                    # Styringsrapporter & Høyoppløselige Visualiseringer
+│   ├── Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pptx # Komplett 10-siders PowerPoint i 16:9 widescreen
+│   ├── Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pdf  # Formell 6-siders A4 landscape PDF styringsrapport
+│   ├── chart_bomiljo_monthly.png       # Månedlig forløp, februarsjokk & Net Zero tiltaksbane
+│   ├── chart_komskole_units.png        # Horisontale enhetsavvik for Mevold Skole
+│   └── chart_netzero_waterfall.png     # Konsolidert vannfallsdiagram mot Net Zero budsjettbalanse
 ├── src/                        # Operativ Python-kildekode
 │   ├── build_golden_record.py  # Hoved-ETL (100 % Python Standard Library)
 │   ├── build_excel_epm_model.py# Generator for master Excel EPM-modell
+│   ├── generate_charts.py      # Generator for Tufte-grafer og vannfallsdiagrammer
+│   ├── generate_powerpoint_report.py # Generator for 16:9 executive PowerPoint rapport
+│   ├── generate_pdf_report.py  # Generator for formell ReportLab PDF styringsrapport
 │   ├── epm_agentic_pipeline.py # Multi-agent orkestrering & HITL-logging
 │   └── hitl_writeback_ui.py    # Streamlit Human-in-the-Loop Web-UI med SQLite writeback
 ├── hitl_writeback_ui.py        # Snarvei for Streamlit HITL Portal i rotkatalog
@@ -186,6 +195,18 @@ Dette kjører en simulert multi-agent-analyse, oppdager overtidssveksten i boenh
 streamlit run hitl_writeback_ui.py
 ```
 Starter det interaktive webpanelet for enhetsledere og controllere. Her kan man inspisere AI-genererte avviksanalyser, overstyre eller godkjenne foreslåtte tiltak (f.eks. omdisponering av vikarbudsjett), og utføre direkte writeback til `Audit_AI_Actions`-revisjonssporet i SQLite-databasen med fullt etisk og juridisk sporingsvern (EU AI Act Compliance).
+
+### 4. Generer Fullstendige Styringsrapporter (PowerPoint, PDF & Grafer)
+```bash
+python src/generate_charts.py
+python src/generate_powerpoint_report.py
+python src/generate_pdf_report.py
+```
+Produserer automatisk:
+* `reports/Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pptx` (10 lysbilder)
+* `reports/Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pdf` (6 sider A4 liggende)
+* Høyoppløselige visualiseringer i `reports/*.png`.
+
 
 ---
 
