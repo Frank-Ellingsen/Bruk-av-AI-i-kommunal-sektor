@@ -1,0 +1,6 @@
+# Kristiansand EPM & AI Agentic Framework
+# Note: Core ETL (src/build_golden_record.py) uses only Python standard library (sqlite3, csv, hashlib).
+# The packages below are used for advanced agent orchestration and spreadsheet analysis:
+
+pandas>=2.0.0
+openpyxl>=3.1.0
