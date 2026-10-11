@@ -149,12 +149,10 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 │   ├── fxOpenAI_RAG.m                  # Power Query M-funksjon for OpenAI RAG-integrasjon
 │   ├── generate_excel_powerbi_model.py # Generator for konsolidert arbeidsbok
 │   └── Kristiansand_EPM_PowerBI_Model.xlsx # Fullstendig modell for direkte Power BI import
-├── reports/                    # Styringsrapporter & Høyoppløselige Visualiseringer
-│   ├── Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pptx # Komplett 10-siders PowerPoint i 16:9 widescreen
-│   ├── Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pdf  # Formell 6-siders A4 landscape PDF styringsrapport
-│   ├── chart_bomiljo_monthly.png       # Månedlig forløp, februarsjokk & Net Zero tiltaksbane
-│   ├── chart_komskole_units.png        # Horisontale enhetsavvik for Mevold Skole
-│   └── chart_netzero_waterfall.png     # Konsolidert vannfallsdiagram mot Net Zero budsjettbalanse
+├── artifacts/                  # Genererte byggresultater og rapporter (ikke kildekode)
+│   ├── reports/                # PDF/PPTX/PNG-rapporter og grafiske outputs
+│   └── kristiansand_golden_record.db # Kanonisk SQLite golden-record datasett
+├── data/                       # Kildedata (CSV og andre rådata)
 ├── src/                        # Operativ Python-kildekode
 │   ├── build_golden_record.py  # Hoved-ETL (100 % Python Standard Library)
 │   ├── build_excel_epm_model.py# Generator for master Excel EPM-modell
@@ -178,11 +176,17 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 * Python 3.10 eller nyere.
 * Core ETL har **null eksterne avhengigheter** (benytter utelukkende Pythons innebygde standardbibliotek: `sqlite3`, `csv`, `hashlib`, `pathlib`).
 
+### 0. Konfigurer miljøet
+```bash
+cp .env.example .env
+```
+Dette setter opp standardstier for kildekatalog og genererte artefakter. Standardmodellen lagrer den kanoniske SQLite-databasen i `artifacts/kristiansand_golden_record.db` og rapporter i `artifacts/reports/`.
+
 ### 1. Bygg Golden Record SQLite-databasen
 ```bash
-python src/build_golden_record.py
+python run_pipeline.py --etl
 ```
-Dette etablerer `kristiansand_golden_record.db` med stjernemodellen, konsoliderer 1 250 transaksjoner fra begge use cases og genererer analytiske views (`V_Fact_Full`, `V_Avvik_YTD`).
+Dette etablerer `artifacts/kristiansand_golden_record.db` med stjernemodellen, konsoliderer data fra begge use cases og genererer analytiske views (`V_Fact_Full`, `V_Avvik_YTD`).
 
 ### 2. Kjør Agentisk EPM-Pipeline
 ```bash
@@ -192,11 +196,21 @@ Dette kjører en simulert multi-agent-analyse, oppdager overtidssveksten i boenh
 
 ### 3. Start Human-in-the-Loop (HITL) Web-grensesnitt
 ```bash
+python run_pipeline.py --ui
+```
+Eller, som direkte Streamlit-start:
+```bash
 streamlit run hitl_writeback_ui.py
 ```
-Starter det interaktive webpanelet for enhetsledere og controllere. Her kan man inspisere AI-genererte avviksanalyser, overstyre eller godkjenne foreslåtte tiltak (f.eks. omdisponering av vikarbudsjett), og utføre direkte writeback til `Audit_AI_Actions`-revisjonssporet i SQLite-databasen med fullt etisk og juridisk sporingsvern (EU AI Act Compliance).
+Denne kommandoen starter det interaktive webpanelet for enhetsledere og controllere. Her kan man inspisere AI-genererte avviksanalyser, overstyre eller godkjenne foreslåtte tiltak (f.eks. omdisponering av vikarbudsjett), og utføre direkte writeback til `Audit_AI_Actions`-revisjonssporet i SQLite-databasen med fullt etisk og juridisk sporingsvern (EU AI Act Compliance). Databasen og rapporter lagres i `artifacts/`, mens rådata ligger i `data/`.
 
-### 4. Generer Fullstendige Styringsrapporter (PowerPoint, PDF & Grafer)
+### 4. Kjør hele arbeidsflyten på en gang
+```bash
+python run_pipeline.py --all
+```
+Dette bygger databasen og starter deretter HITL-portalen i samme operasjon.
+
+### 5. Generer Fullstendige Styringsrapporter (PowerPoint, PDF & Grafer)
 ```bash
 python src/generate_charts.py
 python src/generate_powerpoint_report.py

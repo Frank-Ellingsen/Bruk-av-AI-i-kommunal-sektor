@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kristiansand-epm"
+version = "0.1.0"
+description = "Antigravity EPM analytics and governance framework for Kristiansand kommune"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Frank Ellingsen" }]
+license = { text = "MIT" }
+keywords = ["municipality", "epm", "analytics", "power-bi", "governance", "ai"]
+dependencies = [
+  "pandas>=2.0.0",
+  "openpyxl>=3.1.0",
+  "streamlit>=1.28.0",
+  "python-pptx>=1.0.0",
+  "reportlab>=4.0.0",
+  "matplotlib>=3.8.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "ruff>=0.5.0",
+]
+
+[project.scripts]
+epm = "run_pipeline:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 120
+src = ["src", "."]

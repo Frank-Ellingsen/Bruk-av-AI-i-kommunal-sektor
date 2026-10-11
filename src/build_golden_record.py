@@ -21,6 +21,8 @@ import sqlite3
 import datetime
 from pathlib import Path
 
+from config import DB_PATH, DATA_DIR
+
 # Sikre UTF-8 output på Windows-konsoll
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -28,14 +30,12 @@ if hasattr(sys.stdout, "reconfigure"):
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent if BASE_DIR.name == "src" else BASE_DIR
 
-# Robust sti-oppslag for prosjektstrukturen
-DB_PATH = PROJECT_ROOT / "kristiansand_golden_record.db"
 
 def find_data_file(filename):
-    for candidate in [PROJECT_ROOT / "data" / filename, BASE_DIR / filename, PROJECT_ROOT / filename]:
+    for candidate in [DATA_DIR / filename, PROJECT_ROOT / "data" / filename, BASE_DIR / filename, PROJECT_ROOT / filename]:
         if candidate.exists():
             return candidate
-    return PROJECT_ROOT / "data" / filename
+    return DATA_DIR / filename
 
 BOMILJO_CSV = find_data_file("BoMiljø.csv")
 KOMSKOLE_CSV = find_data_file("Komskole.csv")

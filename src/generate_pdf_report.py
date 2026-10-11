@@ -25,9 +25,12 @@ from reportlab.platypus import (
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 
+from config import REPORTS_DIR
+
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent if BASE_DIR.name in ["src", "powerbi"] else BASE_DIR
-REPORTS_DIR = PROJECT_ROOT / "reports"
+REPORTS_DIR = REPORTS_DIR
+REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 PDF_PATH = REPORTS_DIR / "Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pdf"
 
 # Farger

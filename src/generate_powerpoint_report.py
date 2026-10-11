@@ -19,10 +19,12 @@ from pptx.enum.text import PP_ALIGN
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
 
+from config import REPORTS_DIR
+
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent if BASE_DIR.name in ["src", "powerbi"] else BASE_DIR
-REPORTS_DIR = PROJECT_ROOT / "reports"
-REPORTS_DIR.mkdir(exist_ok=True)
+REPORTS_DIR = REPORTS_DIR
+REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 PPTX_PATH = REPORTS_DIR / "Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pptx"
 
 # Fargepalett (Edward Tufte / Profesjonell Kommunal EPM)

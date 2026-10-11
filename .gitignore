@@ -47,6 +47,18 @@ desktop.ini
 *.db-wal
 *.db-shm
 
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Generated artifacts (keep folder structure but ignore runtime output)
+artifacts/*
+!artifacts/.gitkeep
+!artifacts/reports/
+artifacts/reports/*
+!artifacts/reports/.gitkeep
+
 # Backup / scratch files
 *.bak
 *~

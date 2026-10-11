@@ -22,14 +22,15 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.table import Table, TableStyleInfo
 
+from config import ARTIFACTS_DIR, DB_PATH
+
 # Sikre UTF-8 output
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent if BASE_DIR.name in ["src", "powerbi"] else BASE_DIR
-DB_PATH = PROJECT_ROOT / "kristiansand_golden_record.db"
-OUTPUT_XLSX = PROJECT_ROOT / "Kristiansand_EPM_Excel_Modell.xlsx"
+OUTPUT_XLSX = ARTIFACTS_DIR / "Kristiansand_EPM_Excel_Modell.xlsx"
 
 # -----------------------------------------------------------------------------
 # TUFTE & FAST STILDEFINISJONER

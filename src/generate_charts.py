@@ -20,6 +20,8 @@ if hasattr(sys.stdout, "reconfigure"):
 import matplotlib.pyplot as plt
 import numpy as np
 
+from config import REPORTS_DIR
+
 # Konfigurer matplotlib for headless og UTF-8
 plt.rcParams['font.sans-serif'] = 'DejaVu Sans'
 plt.rcParams['axes.edgecolor'] = '#CBD5E1'
@@ -29,8 +31,8 @@ plt.rcParams['grid.linestyle'] = '--'
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent if BASE_DIR.name in ["src", "powerbi"] else BASE_DIR
-REPORTS_DIR = PROJECT_ROOT / "reports"
-REPORTS_DIR.mkdir(exist_ok=True)
+REPORTS_DIR = REPORTS_DIR
+REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
 def generate_charts():
     # -------------------------------------------------------------------------
