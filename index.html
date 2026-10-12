@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kristiansand Kommune Control Office Hub - Operativ styringshub og navigasjonssenter for Rådgiver Økonomistyring og Økonomidirektør.">
+  <title>Kristiansand Kommune — Control Office Hub ("The Office")</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', Consolas, Monaco, monospace;
+
+      /* Executive Light Theme (Default) */
+      --bg-app: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-surface-elevated: #f1f5f9;
+      --bg-subtle: #f8fafc;
+      --border-subtle: #e2e8f0;
+      --border-strong: #cbd5e1;
+      
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-soft: #64748b;
+
+      /* Muted Semantic Colors (Tufte-aligned) */
+      --accent-navy: #1e3a5f;
+      --accent-blue: #0284c7;
+      --status-completed-bg: #f0fdf4;
+      --status-completed-text: #166534;
+      --status-completed-border: #bbf7d0;
+
+      --status-active-bg: #fffbeb;
+      --status-active-text: #b45309;
+      --status-active-border: #fde68a;
+
+      --status-pending-bg: #f1f5f9;
+      --status-pending-text: #475569;
+      --status-pending-border: #e2e8f0;
+
+      --highlight-alert: #991b1b;
+      --highlight-warning: #b45309;
+    }
+
+    [data-theme="dark"] {
+      --bg-app: #090d16;
+      --bg-surface: #111827;
+      --bg-surface-elevated: #1f2937;
+      --bg-subtle: #162032;
+      --border-subtle: #1f293d;
+      --border-strong: #374151;
+
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-soft: #6b7280;
+
+      --accent-navy: #38bdf8;
+      --accent-blue: #38bdf8;
+      --status-completed-bg: rgba(22, 101, 52, 0.2);
+      --status-completed-text: #4ade80;
+      --status-completed-border: rgba(74, 222, 128, 0.3);
+
+      --status-active-bg: rgba(180, 83, 9, 0.2);
+      --status-active-text: #fcd34d;
+      --status-active-border: rgba(252, 211, 77, 0.3);
+
+      --status-pending-bg: #1f2937;
+      --status-pending-text: #9ca3af;
+      --status-pending-border: #374151;
+
+      --highlight-alert: #f87171;
+      --highlight-warning: #fbbf24;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      line-height: 1.5;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Layout Container */
+    .app-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 20px 60px 20px;
+    }
+
+    /* Top Executive Header */
+    header.header {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+    }
+
+    .header-subtitle {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      margin-top: 4px;
+      font-weight: 400;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    button.btn-util {
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      font-weight: 500;
+      background: var(--bg-surface-elevated);
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 6px 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    button.btn-util:hover {
+      background: var(--border-subtle);
+      color: var(--text-main);
+    }
+
+    /* Executive KPI Strip */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 16px;
+    }
+
+    .kpi-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-soft);
+      font-weight: 600;
+    }
+
+    .kpi-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 3px;
+      border: 1px solid transparent;
+      letter-spacing: 0.02em;
+    }
+
+    .badge-completed {
+      background: var(--status-completed-bg);
+      color: var(--status-completed-text);
+      border-color: var(--status-completed-border);
+    }
+
+    .badge-active {
+      background: var(--status-active-bg);
+      color: var(--status-active-text);
+      border-color: var(--status-active-border);
+    }
+
+    .badge-pending {
+      background: var(--status-pending-bg);
+      color: var(--status-pending-text);
+      border-color: var(--status-pending-border);
+    }
+
+    /* Quick Filter Toolbar */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      max-width: 420px;
+    }
+
+    .search-input {
+      width: 100%;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      padding: 8px 12px 8px 32px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+
+    .nav-shortcuts {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-shortcuts a {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 4px 8px;
+      border-radius: 3px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .nav-shortcuts a:hover {
+      color: var(--accent-blue);
+      border-color: var(--accent-blue);
+    }
+
+    /* Section Shells */
+    section.panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      gap: 12px;
+    }
+
+    h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .section-meta {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    /* Tufte Tables: Minimal ink, NO vertical borders */
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table.tufte-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    table.tufte-table th {
+      font-weight: 600;
+      color: var(--text-soft);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid var(--text-main);
+      padding: 8px 14px 10px 14px;
+      vertical-align: bottom;
+    }
+
+    table.tufte-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      vertical-align: top;
+    }
+
+    table.tufte-table tr:hover td {
+      background-color: var(--bg-subtle);
+    }
+
+    table.tufte-table td.numeric, table.tufte-table th.numeric {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .role-title {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .role-sub {
+      font-size: 11.5px;
+      color: var(--text-soft);
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Year Wheel / Timeline Grid (Section 2) */
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .quarter-card {
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      background: var(--bg-surface);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .quarter-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-surface-elevated);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .quarter-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .quarter-body {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .event-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+
+    .event-status {
+      margin-top: 2px;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .event-date {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-soft);
+      flex-shrink: 0;
+      width: 76px;
+    }
+
+    .event-desc {
+      color: var(--text-muted);
+      flex: 1;
+    }
+
+    .event-desc strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .event-desc em {
+      font-style: italic;
+      color: var(--text-soft);
+      font-size: 11.5px;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Documents Archive (Section 3) */
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .archive-group {
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 16px;
+    }
+
+    .archive-group-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .doc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .doc-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .doc-link-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .doc-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 2px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-surface-elevated);
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .doc-link {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .doc-link:hover {
+      text-decoration: underline;
+    }
+
+    .doc-desc {
+      font-size: 12px;
+      color: var(--text-soft);
+      padding-left: 36px;
+    }
+
+    /* Checklist HITL (Section 4) */
+    .checklist-progress-bar {
+      height: 6px;
+      background: var(--border-subtle);
+      border-radius: 3px;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .checklist-progress-fill {
+      height: 100%;
+      background: #16a34a;
+      width: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .checklist-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .check-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 14px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      background: var(--bg-surface);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+
+    .check-step:hover {
+      background: var(--bg-subtle);
+    }
+
+    .check-step input[type="checkbox"] {
+      margin-top: 3px;
+      accent-color: #16a34a;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .check-content {
+      flex: 1;
+      font-size: 13px;
+    }
+
+    .check-title {
+      font-weight: 600;
+      color: var(--text-main);
+      display: inline;
+    }
+
+    .check-desc {
+      color: var(--text-muted);
+      display: inline;
+      margin-left: 4px;
+    }
+
+    .check-step.completed .check-title,
+    .check-step.completed .check-desc {
+      color: var(--text-soft);
+    }
+
+    /* Stage-Gate Governance (Section 5) */
+    .flow-pipeline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+
+    .gate-node {
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface-elevated);
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      min-width: 130px;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .gate-arrow {
+      color: var(--text-soft);
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .principle-card {
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 14px;
+      background: var(--bg-subtle);
+    }
+
+    .principle-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .principle-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* Footer */
+    footer.app-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 20px;
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-soft);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hash-stamp {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--bg-surface-elevated);
+      padding: 2px 6px;
+      border-radius: 3px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+      }
+      .app-container {
+        max-width: 100%;
+        padding: 0;
+      }
+      .header-controls, .toolbar, .checklist-progress-bar, button {
+        display: none !important;
+      }
+      section.panel {
+        border: none;
+        padding: 12px 0;
+        page-break-inside: avoid;
+      }
+      table.tufte-table th, table.tufte-table td {
+        border-color: #999;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- Top Executive Header -->
+    <header class="header" id="topHeader">
+      <div class="header-top">
+        <div class="brand-title">
+          <span class="brand-icon" aria-hidden="true">🏛️</span>
+          <div>
+            <h1>Kristiansand Kommune — Control Office Hub ("The Office")</h1>
+            <p class="header-subtitle">Operativ Styringshub og Navigasjonssenter for Rådgiver Økonomistyring &amp; Økonomidirektør (Supervisor)</p>
+          </div>
+        </div>
+
+        <div class="header-controls">
+          <button id="themeToggleBtn" class="btn-util" type="button" aria-label="Bytt fargetema">
+            <span id="themeIcon">🌙</span> <span id="themeText">Mørk drakt</span>
+          </button>
+          <button id="printBtn" class="btn-util" type="button" onclick="window.print()" aria-label="Skriv ut rapport">
+            <span>🖨️</span> Skriv ut / PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Strip -->
+      <div class="kpi-strip">
+        <div class="kpi-item">
+          <span class="kpi-label">Årshjul &amp; Periode</span>
+          <span class="kpi-value">Årshjul 2026 &bull; T1 Aktiv</span>
+        </div>
+        <div class="kpi-item">
+          <span class="kpi-label">HITL Sign-Off Modus</span>
+          <span class="kpi-value"><span class="badge badge-active">AKTIV HITL (Gate 6)</span></span>
+        </div>
+        <div class="kpi-item">
+          <span class="kpi-label">Visma Etterslep Nøytralisert</span>
+          <span class="kpi-value"><span class="badge badge-completed">Art 1690 Rekalkulert</span></span>
+        </div>
+        <div class="kpi-item">
+          <span class="kpi-label">EU AI Act / GDPR Samsvar</span>
+          <span class="kpi-value"><span class="badge badge-completed">100% SHA-256 Verifisert</span></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Filter / Nav Toolbar -->
+    <div class="toolbar" id="filterToolbar">
+      <div class="search-box">
+        <span class="search-icon" aria-hidden="true">🔍</span>
+        <input type="text" id="filterInput" class="search-input" placeholder="Filtrer innhold (f.eks. KOSTRA, Visma, HITL, DPIA, art 1690)..." aria-label="Hurtigsøk i huben">
+      </div>
+      <nav class="nav-shortcuts" aria-label="Hurtignavigasjon">
+        <a href="#seksjon-roller">1. Roller</a>
+        <a href="#seksjon-arshjul">2. Årshjul 2026</a>
+        <a href="#seksjon-dokumenter">3. Prosjektarkiv</a>
+        <a href="#seksjon-sjekkliste">4. HITL-Sjekkliste</a>
+        <a href="#seksjon-governance">5. Stage-Gate</a>
+      </nav>
+    </div>
+
+    <!-- SEKSJON 1: Rollearkitektur & Supervisor-Matrise -->
+    <section class="panel searchable-section" id="seksjon-roller">
+      <div class="section-head">
+        <h2>👥 1. Rollearkitektur &amp; Supervisor-Matrise</h2>
+        <span class="section-meta">Avstemt jf. Økonomireglementet § 4.2</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="tufte-table" id="roleMatrixTable">
+          <thead>
+            <tr>
+              <th style="width: 22%;">Rolle</th>
+              <th style="width: 38%;">Hovedansvar i Styringssløyfen</th>
+              <th style="width: 22%;">Systemflate &amp; Verktøy</th>
+              <th style="width: 18%;">Godkjenningsmyndighet</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <span class="role-title">Økonomidirektør</span>
+                <span class="role-sub">Supervisor</span>
+              </td>
+              <td>Overordnet strategisk resultatansvar, politisk innstilling av tertialrapporter og HØP, Stage-Gate godkjenning.</td>
+              <td>Executive Power BI, PDF Briefing, Word Saksfremlegg</td>
+              <td><strong>Endelig kommunal innstilling</strong> til Bystyret</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="role-title">Rådgiver Økonomistyring</span>
+                <span class="role-sub">HITL Controller</span>
+              </td>
+              <td>Daglig avvikskontroll, nøytralisering av Visma ERP-etterslep (art 1690), What-If scenariomodellering, RAG-evaluering og HITL-sign-off.</td>
+              <td>Power BI, Excel What-If, Controller AI Portal, Teams</td>
+              <td><strong>HITL-overprøving</strong> (<code>APPROVED</code> / <code>MODIFIED</code> / <code>REJECTED</code>)</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="role-title">Kommunalsjef</span>
+                <span class="role-sub">Sektorleder</span>
+              </td>
+              <td>Sektorvis rammestyring, godkjenning av omdisponeringer innenfor sektoren jf. Økonomireglementet § 4.2.</td>
+              <td>Power BI Sektormatrise, Framsikt</td>
+              <td>Rammeomdisponering internt i sektor</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="role-title">Enhetsleder</span>
+                <span class="role-sub">Grunnskole / Boenhet</span>
+              </td>
+              <td>Lokal enhetsstyring, oppfølging av fraværstiltak og vikarforbruk.</td>
+              <td>Teams Adaptive Cards, Framsikt</td>
+              <td>Operative driftstiltak</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="role-title">DPO &amp; IT-Sikkerhet</span>
+                <span class="role-sub">Compliance Officer</span>
+              </td>
+              <td>Overvåking av personvern (DPIA), etikk (FRIA), PII-skjerming og uforanderlig SHA-256 Audit Log.</td>
+              <td><code>pii_scrubber.py</code>, Algoritmeregister, Audit Log</td>
+              <td>Sikkerhets- og etikk-godkjenning (Port 1–8)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SEKSJON 2: Det Kommunale Årshjulet 2026 -->
+    <section class="panel searchable-section" id="seksjon-arshjul">
+      <div class="section-head">
+        <h2>🗓️ 2. Det Kommunale Årshjulet 2026 (Tidsfrister &amp; Status)</h2>
+        <span class="section-meta">Oppdatert status per oktober 2026</span>
+      </div>
+
+      <div class="timeline-grid">
+        <!-- Q1 -->
+        <article class="quarter-card">
+          <div class="quarter-header">
+            <span class="quarter-title">🔵 Q1: Årsavslutning &amp; KOSTRA</span>
+            <span class="badge badge-completed">Fullført</span>
+          </div>
+          <div class="quarter-body">
+            <div class="event-row">
+              <span class="event-status">✅</span>
+              <span class="event-date">15. jan</span>
+              <div class="event-desc">
+                Innsending av KOSTRA helse- og omsorgsskjemaer (Skjema 4, 5, 11, 15) til SSB.
+              </div>
+            </div>
+            <div class="event-row">
+              <span class="event-status">✅</span>
+              <span class="event-date">23. feb</span>
+              <div class="event-desc">
+                Obligatorisk innsending av regnskapsfiler (Skjema 0A, 0B, 0M, 0N) til SSB.
+              </div>
+            </div>
+            <div class="event-row">
+              <span class="event-status">✅</span>
+              <span class="event-date">09. mar</span>
+              <div class="event-desc">
+                Endelig regnskapsavslutning og avstemming av årsregnskap 2025.
+              </div>
+            </div>
+            <div class="event-row">
+              <span class="event-status">✅</span>
+              <span class="event-date">15. mar</span>
+              <div class="event-desc">
+                SSB publiserer ureviderte KOSTRA-tall <em>Auto-oppdatering av RAG-kunnskapsbasen</em>
+              </div>
+            </div>
+            <div class="event-row">
+              <span class="event-status">✅</span>
+              <span class="event-date">31. mar</span>
+              <div class="event-desc">
+                Kommunedirektørens ferdigstilling av Årsrapport og Årsregnskap 2025.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Q2 -->
+        <article class="quarter-card">
+          <div class="quarter-header">
+            <span class="quarter-title">🟢 Q2: 1. Tertial (T1) &amp; RNB</span>
+            <span class="badge badge-active">Aktiv / T1</span>
+          </div>
+          <div class="quarter-body">
+            <div class="event-row">
+              <span class="event-status">✅</span>
+              <span class="event-date">15. apr</span>
+              <div class="event-desc">
+                Kommunal Revisjon avgir revisjonsberetning for 2025.
+              </div>
+            </div>
+            <div class="event-row">
+              <span class="event-status">✅</span>
+              <span class="event-date">20. mai</span>
+              <div class="event-desc">
+                Bystyrets behandling og godkjenning av Årsregnskap 2025.
+              </div>
+            </div>
+            <div class="event-row">
+              <span class="event-status">🟡</span>
+              <span class="event-date">25. mai</span>
+              <div class="event-desc">
+                <strong>Fremleggelse av 1. tertialrapport 2026 (T1)</strong>
+                <em>Med Visma ERP-korreksjon og EOY-prognose</em>
+              </div>
+            </div>
+            <div class="event-row">
+              <span class="event-status">⏳</span>
+              <span class="event-date">02. jun</span>
+              <div class="event-desc">
+                Regjeringen fremlegger Revidert nasjonalbudsjett (RNB).
+              </div>
+            </div>
+            <div class="event-row">
+              <span class="event-status">⏳</span>
+              <span class="event-date">15. jun</span>
+              <div class="event-desc">
+                SSB publiserer endelige KOSTRA-tall <em>ASSS-benchmarks oppdateres</em>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Q3 -->
+        <article class="quarter-card">
+          <div class="quarter-header">
+            <span class="quarter-title">🟡 Q3: 2. Tertial (T2) &amp; HØP</span>
+            <span class="badge badge-pending">Planlagt</span>
+          </div>
+          <div class="quarter-body">
+            <div class="event-row">
+              <span class="event-status">⏳</span>
+              <span class="event-date">15. aug</span>
+              <div class="event-desc">
+                Innspill fra tjenesteområdene til ny Handlings- og økonomiplan (HØP).
+              </div>
+            </div>
+            <div class="event-row">
+              <span class="event-status">⏳</span>
+              <span class="event-date">23. sep</span>
+              <div class="event-desc">
+                Kommunedirektørens forslag til HØP 2027–2030 fremlegges.
+              </div>
+            </div>
+            <div class="event-row">
+              <span class="event-status">⏳</span>
+              <span class="event-date">28. sep</span>
+              <div class="event-desc">
+                Behandling og vedtak av <strong>2. tertialrapport (T2)</strong> i Formannskapet og Bystyret.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Q4 -->
+        <article class="quarter-card">
+          <div class="quarter-header">
+            <span class="quarter-title">🔴 Q4: Statsbudsjett &amp; Vedtak</span>
+            <span class="badge badge-pending">Planlagt</span>
+          </div>
+          <div class="quarter-body">
+            <div class="event-row">
+              <span class="event-status">⏳</span>
+              <span class="event-date">07. okt</span>
+              <div class="event-desc">
+                Regjeringen fremlegger Statsbudsjettet 2027.
+              </div>
+            </div>
+            <div class="event-row">
+              <span class="event-status">⏳</span>
+              <span class="event-date">25. nov</span>
+              <div class="event-desc">
+                Formannskapets innstilling til HØP og Årsbudsjett offentliggjøres for høring.
+              </div>
+            </div>
+            <div class="event-row">
+              <span class="event-status">⏳</span>
+              <span class="event-date">18. des</span>
+              <div class="event-desc">
+                <strong>Bystyrets endelige vedtak</strong> av Årsbudsjett 2027 og HØP 2027–2030 (Kommuneloven § 14-3).
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SEKSJON 3: Prosjektarkiv & Underliggende Dokumentasjon -->
+    <section class="panel searchable-section" id="seksjon-dokumenter">
+      <div class="section-head">
+        <h2>📂 3. Prosjektarkiv &amp; Underliggende Dokumentasjon</h2>
+        <span class="section-meta">Validerte artefakter og modeller</span>
+      </div>
+
+      <div class="archive-grid">
+        <!-- Gruppe 1 -->
+        <div class="archive-group">
+          <h3 class="archive-group-title">📄 Ledelses- og Saksdokumenter</h3>
+          <ul class="doc-list">
+            <li class="doc-item">
+              <div class="doc-link-line">
+                <span class="doc-badge">DOCX</span>
+                <a href="./docs/saksfremlegg_epm_okonomidirektor.docx" class="doc-link">Saksfremlegg Word</a>
+              </div>
+              <p class="doc-desc">Formelt saksfremlegg med 4 vedtakspunkter for Bystyret/Lederteamet.</p>
+            </li>
+            <li class="doc-item">
+              <div class="doc-link-line">
+                <span class="doc-badge">PPTX</span>
+                <a href="./epm_presentasjon_okonomidirektor.pptx" class="doc-link">Executive PowerPoint</a>
+              </div>
+              <p class="doc-desc">8-slide stram presentasjon skreddersydd for Økonomidirektøren.</p>
+            </li>
+            <li class="doc-item">
+              <div class="doc-link-line">
+                <span class="doc-badge">PDF</span>
+                <a href="./kristiansand_epm_rammeverk_norsk/dokumentasjon/epm_sammendrag_kristiansand.pdf" class="doc-link">PDF Executive Briefing</a>
+              </div>
+              <p class="doc-desc">1-sides visuelt ledelsessammendrag for styringsmøter.</p>
+            </li>
+            <li class="doc-item">
+              <div class="doc-link-line">
+                <span class="doc-badge">DOCX</span>
+                <a href="./kravspesifikasjon_ai_innkjop.docx" class="doc-link">Anbud Kravspesifikasjon</a>
+              </div>
+              <p class="doc-desc">Bilag 1 Kravspesifikasjon for AI-innkjøp jf. GDPR, EU AI Act, NIS2 og CRA.</p>
+            </li>
+            <li class="doc-item">
+              <div class="doc-link-line">
+                <span class="doc-badge">XLSX</span>
+                <a href="./kristiansand_epm_rammeverk_norsk/dokumentasjon/tildelingsskjema_ai_anbud.xlsx" class="doc-link">Anbud Evalueringsskjema</a>
+              </div>
+              <p class="doc-desc">Interaktivt Excel-skjema for poengsetting og veid evaluering (0–10 skala).</p>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Gruppe 2 -->
+        <div class="archive-group">
+          <h3 class="archive-group-title">📊 Modeller &amp; Dashboards</h3>
+          <ul class="doc-list">
+            <li class="doc-item">
+              <div class="doc-link-line">
+                <span class="doc-badge">XLSX</span>
+                <a href="./Kristiansand_EPM_Excel_Modell.xlsx" class="doc-link">Excel EPM What-If Modell</a>
+              </div>
+              <p class="doc-desc">Dynamisk What-If scenariomodell for Visma-etterslep og EOY-balanse.</p>
+            </li>
+            <li class="doc-item">
+              <div class="doc-link-line">
+                <span class="doc-badge">XLSX</span>
+                <a href="./kristiansand_epm_rammeverk_norsk/data/kontor_oversikt_og_arshjul.xlsx" class="doc-link">Control Office Hub Excel</a>
+              </div>
+              <p class="doc-desc">Interaktivt Excel Dashboard for Supervisor, Årshjul og operativ avsjekk.</p>
+            </li>
+            <li class="doc-item">
+              <div class="doc-link-line">
+                <span class="doc-badge">PNG</span>
+                <a href="./kristiansand_epm_rammeverk_norsk/ressurser/kontor_arbeidsflyt_diagram.png" class="doc-link">Arbeidsflytdiagram PNG</a>
+              </div>
+              <p class="doc-desc">Isometrisk oversiktsdiagram av den digitale styringssløyfen på kontoret.</p>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Gruppe 3 -->
+        <div class="archive-group">
+          <h3 class="archive-group-title">💻 Kildekode &amp; AI-Verktøy</h3>
+          <ul class="doc-list">
+            <li class="doc-item">
+              <div class="doc-link-line">
+                <span class="doc-badge">PY</span>
+                <a href="./hitl_writeback_ui.py" class="doc-link"><code>hitl_writeback_ui.py</code></a>
+              </div>
+              <p class="doc-desc">Controller AI Portal UI (Streamlit) for RAG Glass-Box og SHA-256 Audit Log.</p>
+            </li>
+            <li class="doc-item">
+              <div class="doc-link-line">
+                <span class="doc-badge">PY</span>
+                <a href="./kristiansand_epm_rammeverk_norsk/kildekode/sikkerhet/pii_scrubber.py" class="doc-link"><code>pii_scrubber.py</code></a>
+              </div>
+              <p class="doc-desc">Lokal anonymiseringsmodul for skjerming av FNR, navn og konto før AI-oppslag.</p>
+            </li>
+            <li class="doc-item">
+              <div class="doc-link-line">
+                <span class="doc-badge">PY</span>
+                <a href="./src/epm_agentic_pipeline.py" class="doc-link"><code>epm_agent_pipeline.py</code></a>
+              </div>
+              <p class="doc-desc">ETL- og agent-pipeline for dataintegrasjon mot Visma, KOSTRA og Power BI.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEKSJON 4: Operativ Sjekkliste for Økonomirådgiveren (HITL Workflow) -->
+    <section class="panel searchable-section" id="seksjon-sjekkliste">
+      <div class="section-head">
+        <h2>📝 4. Operativ Sjekkliste for Økonomirådgiveren (HITL Workflow)</h2>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="section-meta" id="checklistCounter">8 av 8 fullført (100%)</span>
+          <button type="button" class="btn-util" id="resetChecklistBtn" style="padding: 3px 8px; font-size: 11px;">Tilbakestill</button>
+        </div>
+      </div>
+
+      <div class="checklist-progress-bar">
+        <div class="checklist-progress-fill" id="checklistProgressFill"></div>
+      </div>
+
+      <div class="checklist-container" id="checklistContainer">
+        <label class="check-step completed" data-step="1">
+          <input type="checkbox" checked data-id="step-1">
+          <div class="check-content">
+            <span class="check-title">Steg 1: Månedlig Visma-Eksport</span> &mdash;
+            <span class="check-desc">Hent ubehandlede saldoer for vikarbruk (art 1020) og NAV-refusjon (art 1690).</span>
+          </div>
+        </label>
+
+        <label class="check-step completed" data-step="2">
+          <input type="checkbox" checked data-id="step-2">
+          <div class="check-content">
+            <span class="check-title">Steg 2: PII-Skjerming</span> &mdash;
+            <span class="check-desc">Kjøre <code>pii_scrubber.py</code> for å garantere at ingen personopplysninger forlater kommunens infrastruktur.</span>
+          </div>
+        </label>
+
+        <label class="check-step completed" data-step="3">
+          <input type="checkbox" checked data-id="step-3">
+          <div class="check-content">
+            <span class="check-title">Steg 3: Power BI Avviksoppdaging</span> &mdash;
+            <span class="check-desc">Identifisér enheter med reelt underliggende merforbruk (<code>[Avvik YTD Korrigert] &gt; 5%</code>).</span>
+          </div>
+        </label>
+
+        <label class="check-step completed" data-step="4">
+          <input type="checkbox" checked data-id="step-4">
+          <div class="check-content">
+            <span class="check-title">Steg 4: What-If Simulering</span> &mdash;
+            <span class="check-desc">Test fraværstiltak og rammejusteringer i Excel-modellen for å se EOY-balanseeffekten.</span>
+          </div>
+        </label>
+
+        <label class="check-step completed" data-step="5">
+          <input type="checkbox" checked data-id="step-5">
+          <div class="check-content">
+            <span class="check-title">Steg 5: RAG-Diagnose</span> &mdash;
+            <span class="check-desc">Kjøre AI-analyse i Controller-portalen for å hente kildeforankret hjemmel i Økonomireglementet og 1. tertialrapport.</span>
+          </div>
+        </label>
+
+        <label class="check-step completed" data-step="6">
+          <input type="checkbox" checked data-id="step-6">
+          <div class="check-content">
+            <span class="check-title">Steg 6: HITL Sign-Off</span> &mdash;
+            <span class="check-desc">Velg <code>APPROVED</code>, <code>MODIFIED</code> eller <code>REJECTED</code>, skriv saksbehandlernotat og lagre uforanderlig SHA-256 hash til <code>Audit_AI_Actions</code>.</span>
+          </div>
+        </label>
+
+        <label class="check-step completed" data-step="7">
+          <input type="checkbox" checked data-id="step-7">
+          <div class="check-content">
+            <span class="check-title">Steg 7: Teams-Varsling</span> &mdash;
+            <span class="check-desc">Send automatisk Adaptive Card til Teams-kanalen <em>Virksomhetsstyring</em> for avviksoppfølging.</span>
+          </div>
+        </label>
+
+        <label class="check-step completed" data-step="8">
+          <input type="checkbox" checked data-id="step-8">
+          <div class="check-content">
+            <span class="check-title">Steg 8: Iverksetting</span> &mdash;
+            <span class="check-desc">Registrér omdisponeringen i Framsikt/Visma og arkivér saksnotatet i Public360.</span>
+          </div>
+        </label>
+      </div>
+    </section>
+
+    <!-- SEKSJON 5: Stage-Gate Governance & Etikk-rammeverk -->
+    <section class="panel searchable-section" id="seksjon-governance">
+      <div class="section-head">
+        <h2>🛡️ 5. Stage-Gate Governance &amp; Etikk-rammeverk</h2>
+        <span class="section-meta">EU AI Act &bull; GDPR Art. 35 &bull; Eurocities</span>
+      </div>
+
+      <!-- Linear pipeline overview -->
+      <div class="flow-pipeline" aria-label="Stage Gate Flyt">
+        <div class="gate-node">Port 1: Behov</div>
+        <span class="gate-arrow">➔</span>
+        <div class="gate-node">Port 2: DPIA/FRIA</div>
+        <span class="gate-arrow">➔</span>
+        <div class="gate-node">Port 3: PII-Vask</div>
+        <span class="gate-arrow">➔</span>
+        <div class="gate-node">Port 4: RAG Glass-Box</div>
+        <span class="gate-arrow">➔</span>
+        <div class="gate-node">Port 5: What-If</div>
+        <span class="gate-arrow">➔</span>
+        <div class="gate-node" style="border-color: #0284c7;">Port 6: HITL Sign-Off</div>
+        <span class="gate-arrow">➔</span>
+        <div class="gate-node">Port 7: Audit Log</div>
+        <span class="gate-arrow">➔</span>
+        <div class="gate-node">Port 8: Arkiv</div>
+      </div>
+
+      <!-- Principles Grid -->
+      <div class="principles-grid">
+        <article class="principle-card">
+          <h3 class="principle-title">1. Human-in-the-Loop (HITL)</h3>
+          <p class="principle-desc">AI fatter <strong>0 autonome beslutninger</strong>. All omdisponering og budsjettjustering krever manuell godkjenning fra sertifisert Controller.</p>
+        </article>
+
+        <article class="principle-card">
+          <h3 class="principle-title">2. DPIA (GDPR Art. 35)</h3>
+          <p class="principle-desc">Klientbasert PII-skjerming (<code>pii_scrubber.py</code>) garanterer at ingen personopplysninger forlater kommunens infrastruktur eller benyttes til modelltrening.</p>
+        </article>
+
+        <article class="principle-card">
+          <h3 class="principle-title">3. FRIA (EU AI Act Art. 27)</h3>
+          <p class="principle-desc">Obligatorisk konsekvensvurdering for grunnleggende rettigheter, for å forhindre usaklig forskjellsbehandling mellom virksomhetsenheter.</p>
+        </article>
+
+        <article class="principle-card">
+          <h3 class="principle-title">4. Audit Trail (EU AI Act 12/26)</h3>
+          <p class="principle-desc">Uforanderlig lagring av alle modellbehandlinger med SHA-256 transaksjons-hash i SQLite/DuckDB <code>Audit_AI_Actions</code>.</p>
+        </article>
+
+        <article class="principle-card">
+          <h3 class="principle-title">5. Algoritmeregister</h3>
+          <p class="principle-desc">Offentlig registrering jf. Eurocities-standarden for full innbyggerinnsikt og transparens rundt kommunal AI-bruk.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Executive Footer -->
+    <footer class="app-footer">
+      <div>
+        <strong>Kristiansand Kommune</strong> &bull; Styringshub &bull; Kontor for Økonomistyring
+      </div>
+      <div>
+        Generert fra <a href="./index.md" style="color: inherit; text-decoration: underline;"><code>index.md</code></a> &bull;
+        Revisjon: <span class="hash-stamp">SHA-256 AUDIT-OK</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Interactive Logic -->
+  <script>
+    // Theme Management (Light / Dark)
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+    const savedTheme = localStorage.getItem('krs_epm_theme') || 'light';
+
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'Lys drakt';
+        localStorage.setItem('krs_epm_theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        themeText.textContent = 'Mørk drakt';
+        localStorage.setItem('krs_epm_theme', 'light');
+      }
+    }
+
+    setTheme(savedTheme);
+
+    themeToggleBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // Checklist Management with LocalStorage
+    const checkboxes = document.querySelectorAll('#checklistContainer input[type="checkbox"]');
+    const counterSpan = document.getElementById('checklistCounter');
+    const progressFill = document.getElementById('checklistProgressFill');
+    const resetChecklistBtn = document.getElementById('resetChecklistBtn');
+
+    function updateChecklistProgress() {
+      let checkedCount = 0;
+      checkboxes.forEach((cb) => {
+        const stepLabel = cb.closest('.check-step');
+        if (cb.checked) {
+          checkedCount++;
+          stepLabel.classList.add('completed');
+        } else {
+          stepLabel.classList.remove('completed');
+        }
+      });
+
+      const total = checkboxes.length;
+      const pct = Math.round((checkedCount / total) * 100);
+      counterSpan.textContent = `${checkedCount} av ${total} fullført (${pct}%)`;
+      progressFill.style.width = `${pct}%`;
+
+      // Save state to localStorage
+      const state = Array.from(checkboxes).map(cb => ({ id: cb.dataset.id, checked: cb.checked }));
+      localStorage.setItem('krs_epm_checklist', JSON.stringify(state));
+    }
+
+    // Load saved checklist state or default to all checked
+    try {
+      const saved = localStorage.getItem('krs_epm_checklist');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        parsed.forEach(item => {
+          const cb = document.querySelector(`input[data-id="${item.id}"]`);
+          if (cb) cb.checked = item.checked;
+        });
+      }
+    } catch (e) {
+      console.warn('Kunne ikke laste sjekkliste-tilstand', e);
+    }
+
+    updateChecklistProgress();
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', updateChecklistProgress);
+    });
+
+    resetChecklistBtn.addEventListener('click', () => {
+      checkboxes.forEach(cb => cb.checked = true);
+      updateChecklistProgress();
+    });
+
+    // Quick Live Filter
+    const filterInput = document.getElementById('filterInput');
+    filterInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      
+      // Filter rows in table
+      const rows = document.querySelectorAll('#roleMatrixTable tbody tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(query) ? '' : 'none';
+      });
+
+      // Filter events in timeline
+      const eventRows = document.querySelectorAll('.event-row');
+      eventRows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(query) ? '' : 'none';
+      });
+
+      // Filter docs
+      const docItems = document.querySelectorAll('.doc-item');
+      docItems.forEach(item => {
+        const text = item.innerText.toLowerCase();
+        item.style.display = text.includes(query) ? '' : 'none';
+      });
+
+      // Filter principles
+      const principleCards = document.querySelectorAll('.principle-card');
+      principleCards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(query) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
