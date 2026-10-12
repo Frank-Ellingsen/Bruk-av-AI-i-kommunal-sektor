@@ -65,3 +65,7 @@ artifacts/reports/*
 ~$*
 *.tmp
 scratch/
+
+# Large media files
+*.mp4
+media/
