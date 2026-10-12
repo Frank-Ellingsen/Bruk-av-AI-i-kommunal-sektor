@@ -1,5 +1,5 @@
 # Power BI Datamodell & Rapportarkitektur: Kristiansand EPM
-## Implementasjonsveileder for BoMiljø (Slettheia) og Komskole (Mevold)
+## Implementasjonsveileder for BoMiljø (Kommunal Boenhet) og Komskole (Kommunal Skole)
 
 ---
 
@@ -52,8 +52,8 @@ I henhold til delegeringsreglementet i Kristiansand kommune konfigureres RLS und
 
 | Rolle | Tabell | DAX Filteruttrykk | Målgruppe |
 | :--- | :--- | :--- | :--- |
-| **Enhetsleder_Skole** | `Dim_Ansvar` | `[ansvar_kode] = "2020"` | Rektor Mevold Grunnskole |
-| **Enhetsleder_Boenhet** | `Dim_Ansvar` | `[ansvar_kode] = "2540"` | Avdelingsleder Slettheia Bofellesskap |
+| **Enhetsleder_Skole** | `Dim_Ansvar` | `[ansvar_kode] = "2020"` | Rektor Kommunal Skole |
+| **Enhetsleder_Boenhet** | `Dim_Ansvar` | `[ansvar_kode] = "2540"` | Avdelingsleder Kommunal Boenhet |
 | **Kommunalsjef_Oppvekst**| `Dim_Ansvar` | `[kommunalsjefomrade] = "Oppvekst"` | Kommunalsjef og stabscontrollere |
 | **Kommunalsjef_Helse** | `Dim_Ansvar` | `[kommunalsjefomrade] = "Helse og mestring"` | Kommunalsjef Helse og mestring |
 | **Konsern_Okonomi** | *Ingen* | *Full tilgang (ingen filter)* | Økonomidirektør & Sentral økonomistab |
@@ -75,7 +75,7 @@ Rapporten bygges med 4 dedikerte sider med maksimalt data-ink ratio (ingen 3D, i
   * Kolonner: `Budsjett YTD`, `Regnskap YTD`, `Avvik YTD`, `Avvik YTD %`, `EOY Prognose`
   * Betinget formatering: Bakgrunn styres av målet `[Tufte_Avvik_Farge_HEX]`.
 
-### Side 2: Mevold Grunnskole (KOSTRA 202 – Framsikt Visual Layout)
+### Side 2: Kommunal Skole (KOSTRA 202 – Framsikt Visual Layout)
 *Inspirert av skole1.png, skole2.png og skole_framsikt_cond_format.png:*
 * **Hovedtabell / Matrise (Betinget formatering med Data Bars og KPI-flagg):**
   * Rader: `Enhet (brukt)` (Ordinær undervisning, Spesialundervisning, Grunnskole, SFO, Voksenopplæring, Skoleskyss, PPT, Leirskole).
@@ -96,7 +96,7 @@ Rapporten bygges med 4 dedikerte sider med maksimalt data-ink ratio (ingen 3D, i
   * Topp Negativ: Fastlønn lærere (-1 436 kNOK), Lønn til vikarer (-381 kNOK), Sykevikarer (-272 kNOK), Overtid (-230 kNOK).
   * Topp Positiv: Refusjon fødselspenger (+979 kNOK), Sykelønnsrefusjon (+449 kNOK), Momskompensasjon (+266 kNOK).
 
-### Side 3: Slettheia Bofellesskap (KOSTRA 254 – Framsikt Visual Layout)
+### Side 3: Kommunal Boenhet (KOSTRA 254 – Framsikt Visual Layout)
 *Inspirert av boom1.png og boom2.png:*
 * **Gauge & Månedskort:**
   * Halvsirkel-gauge: Regnskap YTD 12 630 912 kr vs Budsjett YTD 11 337 125 kr (Avvik -1 293 787 kr / -11 %).
@@ -116,7 +116,7 @@ Rapporten bygges med 4 dedikerte sider med maksimalt data-ink ratio (ingen 3D, i
 
 ### Side 4: Net Zero Balanseringsplan & Tiltakseffekt (Mål: 0 kr i EOY-avvik)
 * **Status vs Tiltaksbane:**
-  * Viser uendret run-rate prognose (Slettheia: -1,93 MNOK / Mevold: -1,42 MNOK) mot iverksatte tiltak.
+  * Viser uendret run-rate prognose (Kommunal Boenhet: -1,93 MNOK / Kommunal Skole: -1,42 MNOK) mot iverksatte tiltak.
   * Månedlig tiltaksprofil (September - Desember) som faser inn kostnadskutt og refusjonsinnkreving.
   * Sluttavvik per 31.12 = **0 kr** (100 % balanse mot årsbudsjett).
 * **Tiltaksmatrise:**

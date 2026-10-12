@@ -17,8 +17,8 @@ Dette repositoriet implementerer **Antigravity EPM Framework** for proaktiv øko
 
 Løsningen transformerer kommunal virksomhetsstyring fra tradisjonell, tilbakeskuende tertialrapportering (reaktiv kontroll) til en **kontinuerlig, agentbasert tidligvarsling og beslutningsstøtte (60–90 dager før tertialslutt)**, forankret i to representative kommunale enheter:
 
-1. **Kommunal Skole (Oppvekstsektoren):** *Mevold Grunnskole* (`KOSTRA 202`) – Rammestyrt enhet med undervisningsplikt, assistenttimer, enkeltvedtak og sesongmessige vikarutgifter.
-2. **Kommunal Boenhet (Helse og mestring):** *Slettheia Bofellesskap* (`KOSTRA 254`) – Døgnkontinuerlig enhet (24/7) med turnuspress, overtid/helgetillegg, eksterne vikarbyråer og ressurskrevende brukere.
+1. **Kommunal Skole (Oppvekstsektoren, KOSTRA 202):** Rammestyrt enhet med undervisningsplikt, assistenttimer, enkeltvedtak og sesongmessige vikarutgifter.
+2. **Kommunal Boenhet (Helse og mestring, KOSTRA 254):** Døgnkontinuerlig enhet (24/7) med turnuspress, overtid/helgetillegg, eksterne vikarbyråer og ressurskrevende brukere.
 
 ---
 
@@ -128,11 +128,11 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 │   ├── 07_excel_powerbi_reporting_expert_agent.md
 │   └── 08_multilevel_stakeholder_reporting_agent.md
 ├── data/                       # Grunnlagsdata og normaliserte regnskapsfiler
-│   ├── BoMiljø.csv             # Slettheia Bofellesskap (1 056 rader, 12 mnd)
-│   ├── Komskole.csv            # Mevold Grunnskole / Åseral (194 rader)
+│   ├── BoMiljø.csv             # Kommunal Boenhet (1 056 rader, 12 mnd)
+│   ├── Komskole.csv            # Kommunal Skole (194 rader)
 │   ├── kostra_kontoplan.csv    # Fullstendig KOSTRA kontoplanhierarki (funksjon & art)
 │   ├── Rapport Enhet Bo og Miljø.xlsx # Framsikt eksportrapport Bo og Miljø
-│   └── Rapport Enhet Skole.xlsx# Framsikt eksportrapport Mevold Skole
+│   └── Rapport Enhet Skole.xlsx# Framsikt eksportrapport Kommunal Skole
 ├── docs/                       # Saksfremlegg, rammeverk og referansedokumenter
 │   ├── antigravity_usecase_epm.md      # Full teknisk og forretningsmessig spesifikasjon
 │   ├── dax_kostra_kpi_package.md       # Full DAX-pakke for KOSTRA & kommunal økonomistyring

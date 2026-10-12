@@ -261,7 +261,7 @@ IF(
 
 ## 6. Organizational Hierarchy Row-Level Security (RLS)
 
-Sikrer at enhetsledere (f.eks. for *Mevold Grunnskole* eller *Slettheia Bofellesskap*) kun ser sine egne KOSTRA-ansvarssteder, mens kommunalsjefer og økonomidirektør ser hele sektoren.
+Sikrer at enhetsledere (f.eks. for *Kommunal Skole* eller *Kommunal Boenhet*) kun ser sine egne KOSTRA-ansvarssteder, mens kommunalsjefer og økonomidirektør ser hele sektoren.
 
 ```dax
 // -----------------------------------------------------------------------------

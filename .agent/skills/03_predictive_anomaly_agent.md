@@ -10,11 +10,11 @@
 
 ## 2. Sector-Specific Anomaly Rules
 
-### A. Oppvekst (Kommunal Skole - e.g., Mevold Grunnskole)
+### A. Oppvekst (Kommunal Skole - e.g., Kommunal Skole)
 - **Primary Cost Driver:** Substitute teacher costs (Art 1020) and overtime (Art 1090) triggered by short/long-term sick leave or individual special education decisions (*enkeltvedtak*).
 - **False Positive Filter:** NAV sick pay reimbursements (Art 1690) are frequently delayed by 30–60 days due to processing times. The agent MUST NOT trigger an unmitigated overrun alert if Art 1020 is offset by expected future Art 1690 receipts based on historical NAV claim logs.
 
-### B. Helse og mestring (Kommunal Boenhet - e.g., Slettheia Bofellesskap)
+### B. Helse og mestring (Kommunal Boenhet - e.g., Kommunal Boenhet)
 - **Primary Cost Driver:** 24/7 Shift coverage, weekend overtime supplements (Art 1090), and external agency staffing.
 - **Anomaly Condition:** Trigger HIGH ALERT if Art 1090 + Art 1020 exceeds 15% of monthly baseline payroll (Art 1010) for 2 consecutive months.
 

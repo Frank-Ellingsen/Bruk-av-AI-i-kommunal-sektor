@@ -228,8 +228,8 @@ IF([EOY RunRate Avvik] > 0, [EOY RunRate Avvik], 0)
 [Planlagt Tiltakseffekt T3] = 
 SWITCH(
     SELECTEDVALUE(Dim_Ansvar[ansvar_kode]),
-    "2540", 1928421, // Slettheia Bofellesskap (Vikarstopp, turnusomlegging, ressurskrevende refusjon)
-    "2020", 863000,  // Mevold Grunnskole (Lærervikarstopp, IKT/innkjøpsfrys, refusjonsavstemming)
+    "2540", 1928421, // Kommunal Boenhet (Vikarstopp, turnusomlegging, ressurskrevende refusjon)
+    "2020", 863000,  // Kommunal Skole (Lærervikarstopp, IKT/innkjøpsfrys, refusjonsavstemming)
     2791421          // Konsolidert sum
 )
 

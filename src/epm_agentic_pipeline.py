@@ -48,8 +48,8 @@ def init_golden_record_db(db_path: Path = DB_PATH):
         populate_dimensions(conn)
     else:
         # Sikre at standard demo-ansvar og funksjoner finnes
-        cursor.execute("INSERT OR IGNORE INTO Dim_Ansvar (ansvar_kode, ansvar_navn, kommunalsjefomrade) VALUES ('4100', 'Mevold Grunnskole', 'Oppvekst');")
-        cursor.execute("INSERT OR IGNORE INTO Dim_Ansvar (ansvar_kode, ansvar_navn, kommunalsjefomrade) VALUES ('5200', 'Slettheia Bofellesskap', 'Helse og mestring');")
+        cursor.execute("INSERT OR IGNORE INTO Dim_Ansvar (ansvar_kode, ansvar_navn, kommunalsjefomrade) VALUES ('4100', 'Kommunal Skole', 'Oppvekst');")
+        cursor.execute("INSERT OR IGNORE INTO Dim_Ansvar (ansvar_kode, ansvar_navn, kommunalsjefomrade) VALUES ('5200', 'Kommunal Boenhet', 'Helse og mestring');")
         
         # Sikre demo-datoer for 2026
         for m in range(1, 5):
@@ -160,12 +160,12 @@ if __name__ == "__main__":
 
     # 2. Eksempel på rådata fra kildene (Skole og Boenhet)
     sample_data = [
-        # Mevold Grunnskole (Oppvekst)
+        # Kommunal Skole (Oppvekst)
         {'kilde': 'Visma_Skole', 'dato': '2026-04-30', 'ansvar': '4100', 'funksjon': '202', 'art': '1010', 'belop': 898000.0, 'budsjett': 880000.0},
         {'kilde': 'Visma_Skole', 'dato': '2026-04-30', 'ansvar': '4100', 'funksjon': '202', 'art': '1020', 'belop': 77000.0, 'budsjett': 30000.0},
         {'kilde': 'Visma_Skole', 'dato': '2026-04-30', 'ansvar': '4100', 'funksjon': '202', 'art': '1690', 'belop': -28000.0, 'budsjett': -25000.0},
         
-        # Slettheia Bofellesskap (Helse og mestring)
+        # Kommunal Boenhet (Helse og mestring)
         {'kilde': 'Agresso_Boenhet', 'dato': '2026-04-30', 'ansvar': '5200', 'funksjon': '254', 'art': '1010', 'belop': 1235000.0, 'budsjett': 1200000.0},
         {'kilde': 'Agresso_Boenhet', 'dato': '2026-04-30', 'ansvar': '5200', 'funksjon': '254', 'art': '1090', 'belop': 177000.0, 'budsjett': 60000.0},
         {'kilde': 'Agresso_Boenhet', 'dato': '2026-04-30', 'ansvar': '5200', 'funksjon': '254', 'art': '1690', 'belop': -45000.0, 'budsjett': -40000.0}

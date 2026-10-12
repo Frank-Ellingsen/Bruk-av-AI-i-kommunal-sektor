@@ -10,7 +10,7 @@ Bygger en komplett, produksjonsklar Excel-arbeidsbok:
 - Dynamiske Excel-formler (SUMIFS, XLOOKUP, IF) for alle EPM-mål
 - Edward Tufte Data-Ink standarder (ingen vertikale gitterlinjer, høyrejusterte tall)
 - FAST standard formattering (Inputs, formler, sammendrag)
-- Dekker Mevold Grunnskole (Oppvekst) og Slettheia Bofellesskap (Helse og mestring)
+- Dekker Kommunal Skole (Oppvekst) og Kommunal Boenhet (Helse og mestring)
 ===============================================================================
 """
 
@@ -232,13 +232,13 @@ def build_workbook():
         cell.alignment = Alignment(horizontal="right")
 
     # =========================================================================
-    # ARK 2: 2_Mevold_Grunnskole (Oppvekstsektoren - Framsikt Visning)
+    # ARK 2: 2_Kommunal_Skole (Oppvekstsektoren - Framsikt Visning)
     # =========================================================================
-    ws2 = wb.create_sheet(title="2_Mevold_Grunnskole")
+    ws2 = wb.create_sheet(title="2_Kommunal_Skole")
     ws2.views.sheetView[0].showGridLines = True
 
-    ws2.cell(row=2, column=2, value="MEVOLD GRUNNSKOLE - RAMMESTYRING & ENHETSFORDELING (KOSTRA 202)").font = FONT_TITLE
-    ws2.cell(row=3, column=2, value="Oppvekstsektoren | Rektor Mevold Grunnskole | Framsikt visning (jfr. skole1.png og skole_framsikt_cond_format.png)").font = FONT_SUBTITLE
+    ws2.cell(row=2, column=2, value="KOMMUNAL SKOLE - RAMMESTYRING & ENHETSFORDELING (KOSTRA 202)").font = FONT_TITLE
+    ws2.cell(row=3, column=2, value="Oppvekstsektoren | Rektor Kommunal Skole | Framsikt visning (jfr. skole1.png og skole_framsikt_cond_format.png)").font = FONT_SUBTITLE
 
     # Tabell 1: Enhetsfordeling (Framsikt Matrise)
     ws2.cell(row=5, column=2, value="1. ENHETSFORDELING PER 2. TERTIAL (FRAMSIKT MATRISE)").font = FONT_SECTION
@@ -282,7 +282,7 @@ def build_workbook():
 
     # Totallinje for Enhetsfordeling
     tot_r2 = curr_r2
-    ws2.cell(row=tot_r2, column=2, value="TOTALT MEVOLD GRUNNSKOLE").font = FONT_BOLD
+    ws2.cell(row=tot_r2, column=2, value="TOTALT KOMMUNAL SKOLE").font = FONT_BOLD
     ws2.cell(row=tot_r2, column=2).border = BORDER_TOTAL
     ws2.cell(row=tot_r2, column=3, value=f"=SUM(C{start_r2+1}:C{tot_r2-1})").number_format = "#,##0 kr"
     ws2.cell(row=tot_r2, column=4, value=f"=SUM(D{start_r2+1}:D{tot_r2-1})").number_format = "#,##0 kr"
@@ -347,13 +347,13 @@ def build_workbook():
         curr_r2_detail += 1
 
     # =========================================================================
-    # ARK 3: 3_Slettheia_Bofellesskap (Helse og Mestring - Framsikt Visning)
+    # ARK 3: 3_Kommunal_Boenhet (Helse og Mestring - Framsikt Visning)
     # =========================================================================
-    ws3 = wb.create_sheet(title="3_Slettheia_Bofellesskap")
+    ws3 = wb.create_sheet(title="3_Kommunal_Boenhet")
     ws3.views.sheetView[0].showGridLines = True
 
-    ws3.cell(row=2, column=2, value="SLETTHEIA BOFELLESSKAP - 24/7 DØGNBEMANNING & TURNUS (KOSTRA 254)").font = FONT_TITLE
-    ws3.cell(row=3, column=2, value="Helse og mestring | Enhetsleder Slettheia | Framsikt visning (jfr. boom1.png og boom2.png)").font = FONT_SUBTITLE
+    ws3.cell(row=2, column=2, value="KOMMUNAL BOENHET - 24/7 DØGNBEMANNING & TURNUS (KOSTRA 254)").font = FONT_TITLE
+    ws3.cell(row=3, column=2, value="Helse og mestring | Enhetsleder Kommunal Boenhet | Framsikt visning (jfr. boom1.png og boom2.png)").font = FONT_SUBTITLE
 
     # Tabell 1: Månedlig forløp Jan-Aug med februaranomalien
     ws3.cell(row=5, column=2, value="1. MÅNEDLIG AVVIKSUTVIKLING JANUAR-AUGUST (BOOM1.PNG)").font = FONT_SECTION
@@ -482,8 +482,8 @@ def build_workbook():
         c.alignment = Alignment(horizontal="right" if "kr" in h or "Årsbudsjett" in h or "Regnskap" in h or "Avvik" in h or "Tiltak" in h else "left")
 
     eoy_cases = [
-        ("Slettheia Bofellesskap (Helse)", 17233691, 12622851, 19162112, -1928421, 1928421, 17233691, 0),
-        ("Mevold Grunnskole (Oppvekst)", 27490000, 18902000, 28353000, -863000, 863000, 27490000, 0),
+        ("Kommunal Boenhet (Helse)", 17233691, 12622851, 19162112, -1928421, 1928421, 17233691, 0),
+        ("Kommunal Skole (Oppvekst)", 27490000, 18902000, 28353000, -863000, 863000, 27490000, 0),
         ("TOTALT KONSOLIDERT", 44723691, 31524851, 47515112, -2791421, 2791421, 44723691, 0)
     ]
     curr_r4 = start_r4 + 1
@@ -521,16 +521,16 @@ def build_workbook():
         c.alignment = Alignment(horizontal="right" if "kr" in h or "Effekt" in h else "left")
 
     master_actions = [
-        ("B1", "Slettheia", "Totalstopp for eksterne vikarbyråer (Adecco/Dedicate); overgang til intern pool", "127040", "Enhetsleder", 125000, 500000, "Rammeavtalebehov avslått"),
-        ("B2", "Slettheia", "Turnusomlegging & forhåndsavtalt helgedekning, kutt i kveld/nattillegg", "102030/31", "Avdelingsleder", 110000, 440000, "Drøftet med tillitsvalgte"),
-        ("B3", "Slettheia", "Restriktiv overtidskontroll & ledergodkjenning før ekstra vakter", "104000", "Enhetsleder", 95000, 380000, "Digital timeregistrering"),
-        ("B4", "Slettheia", "Intensivert sykefraværsoppfølging (IA) og full avstemming av NAV-sykepenger", "102000/1690", "HR / Enhetsleder", 100000, 400000, "Månedlig Altinn-avstemming"),
-        ("B5", "Slettheia", "Toppfinansiering ressurskrevende tjenester for 2 beboere m/ 2:1-bemanning", "170000", "Kommunalsjef", 52105, 208421, "Søknad Helse- og omsorgsdep."),
-        ("S1", "Mevold", "Stopp i eksterne lærervikarer; intern timebytte og ressursomdisponering", "1020", "Rektor", 125000, 500000, "Fagledermøte / leseplikt"),
-        ("S2", "Mevold", "Timeplanoptimalisering: Sammenslåing av paralleller og kutt i ekstrahjelp", "1030", "Undervisningsinsp.", 75000, 300000, "Timeplanlegger revidert"),
-        ("S3", "Mevold", "Innkjøpsfrys på IKT-utstyr, nye læremidler, inventar og administrative driftsmidler", "1110-1200", "Rektor / Admin", 50000, 200000, "Kun akutt materiell tillates"),
-        ("S4", "Mevold", "Aktiv purring og full avstemming av utestående NAV sykelønnsrefusjoner", "1690", "Skolesekretær/HR", 62500, 250000, "NAV forvaltning avstemt"),
-        ("S5", "Mevold", "Samordning av spesialpedagogiske timer og assistentressurser på tvers av trinn", "1010", "Avdelingsleder", 41500, 166000, "PPT og skolehelsetjeneste")
+        ("B1", "Kommunal Boenhet", "Totalstopp for eksterne vikarbyråer (Adecco/Dedicate); overgang til intern pool", "127040", "Enhetsleder", 125000, 500000, "Rammeavtalebehov avslått"),
+        ("B2", "Kommunal Boenhet", "Turnusomlegging & forhåndsavtalt helgedekning, kutt i kveld/nattillegg", "102030/31", "Avdelingsleder", 110000, 440000, "Drøftet med tillitsvalgte"),
+        ("B3", "Kommunal Boenhet", "Restriktiv overtidskontroll & ledergodkjenning før ekstra vakter", "104000", "Enhetsleder", 95000, 380000, "Digital timeregistrering"),
+        ("B4", "Kommunal Boenhet", "Intensivert sykefraværsoppfølging (IA) og full avstemming av NAV-sykepenger", "102000/1690", "HR / Enhetsleder", 100000, 400000, "Månedlig Altinn-avstemming"),
+        ("B5", "Kommunal Boenhet", "Toppfinansiering ressurskrevende tjenester for 2 beboere m/ 2:1-bemanning", "170000", "Kommunalsjef", 52105, 208421, "Søknad Helse- og omsorgsdep."),
+        ("S1", "Kommunal Skole", "Stopp i eksterne lærervikarer; intern timebytte og ressursomdisponering", "1020", "Rektor", 125000, 500000, "Fagledermøte / leseplikt"),
+        ("S2", "Kommunal Skole", "Timeplanoptimalisering: Sammenslåing av paralleller og kutt i ekstrahjelp", "1030", "Undervisningsinsp.", 75000, 300000, "Timeplanlegger revidert"),
+        ("S3", "Kommunal Skole", "Innkjøpsfrys på IKT-utstyr, nye læremidler, inventar og administrative driftsmidler", "1110-1200", "Rektor / Admin", 50000, 200000, "Kun akutt materiell tillates"),
+        ("S4", "Kommunal Skole", "Aktiv purring og full avstemming av utestående NAV sykelønnsrefusjoner", "1690", "Skolesekretær/HR", 62500, 250000, "NAV forvaltning avstemt"),
+        ("S5", "Kommunal Skole", "Samordning av spesialpedagogiske timer og assistentressurser på tvers av trinn", "1010", "Avdelingsleder", 41500, 166000, "PPT og skolehelsetjeneste")
     ]
     curr_r4_det = start_r4_sub + 1
     for tid, enh, besk, art, ans, takt, eff, forank in master_actions:

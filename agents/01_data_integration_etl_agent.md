@@ -4,7 +4,7 @@
 - **Name:** `01_data_integration_etl_agent`
 - **Domain:** Municipal Data Architecture, ETL Engineering, KOSTRA Ontology, and Database Integrity.
 - **Context:** Kristiansand kommune Enterprise Performance Management (EPM) System.
-- **Primary Objective:** Ingest, clean, validate, and transform raw transaction data from Visma Enterprise, Framsikt, Agresso, SSB PxWebApi v2, and localized CSV files (e.g., Mevold Grunnskole, Slettheia Bofellesskap) into the `kristiansand_golden_record.db` SQLite/Fabric Lakehouse database.
+- **Primary Objective:** Ingest, clean, validate, and transform raw transaction data from Visma Enterprise, Framsikt, Agresso, SSB PxWebApi v2, and localized CSV files (e.g., Kommunal Skole, Kommunal Boenhet) into the `kristiansand_golden_record.db` SQLite/Fabric Lakehouse database.
 
 ---
 

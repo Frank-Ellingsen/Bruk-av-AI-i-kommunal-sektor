@@ -154,7 +154,7 @@ def create_excel_model():
     # Tittelblokk
     title_cell = ws_dash.cell(row=2, column=2, value="KRISTIANSAND KOMMUNE - VIRKSOMHETSSTYRING T2")
     title_cell.font = Font(name='Segoe UI', size=14, bold=True, color='1A202C')
-    subtitle_cell = ws_dash.cell(row=3, column=2, value="Konsolidert avviksoppfølging: Mevold Grunnskole vs. Slettheia Bofellesskap")
+    subtitle_cell = ws_dash.cell(row=3, column=2, value="Konsolidert avviksoppfølging: Kommunal Skole vs. Kommunal Boenhet")
     subtitle_cell.font = Font(name='Segoe UI', size=10, italic=True, color='718096')
 
     headers_dash = ["Kommunalsjefområde", "Enhet / Ansvar", "Funksjon", "Budsjett YTD (kr)", "Regnskap YTD (kr)", "Avvik YTD (kr)", "Avvik %", "Status"]

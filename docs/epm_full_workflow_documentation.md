@@ -118,7 +118,7 @@ To prevent "black-box" hallucinations, AI calculations in Excel and Power BI exe
 The Streamlit web application (`hitl_writeback_ui.py`) serves as the primary controller workbench.
 
 ### Workflow Steps:
-1. **Anomaly Detection Display:** Shows flagged variances (e.g. Art 1090 +kr 117,000 at *Slettheia Bofellesskap*, Art 1020 +kr 47,000 at *Mevold Grunnskole*).
+1. **Anomaly Detection Display:** Shows flagged variances (e.g. Art 1090 +kr 117,000 at *Kommunal Boenhet*, Art 1020 +kr 47,000 at *Kommunal Skole*).
 2. **Glass-Box Transparency Panel:** Displays the step-by-step reasoning chain, model confidence score (e.g. 92%), and regulatory references.
 3. **Human Sign-off Form:** The budget controller selects `APPROVED`, `MODIFIED`, or `REJECTED` and inputs manual notes.
 4. **Audit Log Write-back:** Writes the decision, user ID, timestamp, and notes permanently into `Audit_AI_Actions`.

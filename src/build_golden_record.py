@@ -6,7 +6,7 @@ KRISTIANSAND KOMMUNE - EPM GOLDEN RECORD ETL PIPELINE
 ===============================================================================
 Etablerer den kanoniske stjernemodellen i SQLite (kristiansand_golden_record.db)
 for Kristiansand kommune:
-- Kilder: BoMiljø.csv (Slettheia Bofellesskap) & Komskole.csv (Mevold Grunnskole)
+- Kilder: BoMiljø.csv (Kommunal Boenhet) & Komskole.csv (Kommunal Skole)
 - Dimensjoner: Dim_Funksjon, Dim_Art, Dim_Ansvar, Dim_Dato
 - Faktatabell: Fact_Regnskap (med SHA-256 transaksjons-hash)
 - Revisjonsspor: Audit_AI_Actions (Human-in-the-Loop, jf. Kommuneloven § 14-5)
@@ -189,14 +189,14 @@ def populate_dimensions(conn):
 
     # Dim_Ansvar
     ansvar = [
-        ('2020', 'Mevold Grunnskole (Åseral)', 'Oppvekst'),
+        ('2020', 'Kommunal Skole', 'Oppvekst'),
         ('2021', 'SFO-avdelingene', 'Oppvekst'),
         ('2022', 'Grunnskole felles / Leirskole', 'Oppvekst'),
         ('2029', 'Interkommunal PPT-enhet', 'Oppvekst'),
         ('2130', 'Kommunal voksenopplæring', 'Oppvekst'),
         ('2220', 'Skolelokaler / Eiendom', 'Oppvekst / Eiendom'),
         ('2230', 'Skoleskyss / Sentral stab', 'Oppvekst'),
-        ('2540', 'Slettheia Bofellesskap', 'Helse og mestring')
+        ('2540', 'Kommunal Boenhet', 'Helse og mestring')
     ]
     cur.executemany("""
         INSERT OR IGNORE INTO Dim_Ansvar (ansvar_kode, ansvar_navn, kommunalsjefomrade)
@@ -244,7 +244,7 @@ def get_or_create_art(conn, art_kode, art_navn, art_gruppe=None, sign_multiplier
     return cur.lastrowid
 
 def load_bomiljo(conn):
-    """Laster inn data fra BoMiljø.csv (Slettheia Bofellesskap)."""
+    """Laster inn data fra BoMiljø.csv (Kommunal Boenhet)."""
     cur = conn.cursor()
     cur.execute("SELECT funksjon_key FROM Dim_Funksjon WHERE funksjon_kode = '254'")
     funksjon_key = cur.fetchone()[0]
@@ -295,12 +295,12 @@ def load_bomiljo(conn):
     print(f"✓ BoMiljø.csv lastet: {inserted} rader inn i Fact_Regnskap.")
 
 def load_komskole(conn):
-    """Laster inn data fra Komskole.csv (Mevold Grunnskole / Åseral)."""
+    """Laster inn data fra Komskole.csv (Kommunal Skole)."""
     cur = conn.cursor()
     d_key = 20250801 # Aug-25
     
     loc_ansvar_map = {
-        'Åseral barne- og ungdomsskule': '2020',
+        'Kommunal Skole': '2020',
         'SFO-avdelingene (Lislehylen, Storehylen)': '2021',
         'Eget ansvar eller del av grunnskolen': '2022',
         'Leirskole mm': '2022',
@@ -386,19 +386,19 @@ def populate_audit_actions(conn):
             '2024-08-20 09:15:00', '2020', 'Antigravity-EPM-v2.4', 116000.0,
             'Tiltak A: Automatisk purring og avstemming mot NAV for utestående sykelønnsrefusjon (art 1690). Est. likviditetseffekt: kr 28 000.',
             0.94, 'GODKJENT', 'Avstemt mot lønnsavdelingen. Saksbehandler sendte purring via Altinn.',
-            'Rektor Mevold Grunnskole', '10.140.22.15'
+            'Rektor Kommunal Skole', '10.140.22.15'
         ),
         (
             '2024-08-20 09:30:00', '2020', 'Antigravity-EPM-v2.4', 116000.0,
             'Tiltak B: Midlertidig frys i ikke-kritiske rammeavtaleinnkjøp på art 1200 fram til T2. Forventet innsparing: kr 15 000.',
             0.88, 'GODKJENT', 'Godkjent i samråd med controller. Kun akutte driftsartikler tillates.',
-            'Rektor Mevold Grunnskole', '10.140.22.15'
+            'Rektor Kommunal Skole', '10.140.22.15'
         ),
         (
             '2024-08-22 14:10:00', '2540', 'Antigravity-EPM-v2.4', 1285614.0,
             'Tiltak A: Obligatorisk bruk av kommunens interne vikarpool framfor eksterne byråer (art 127040) for helgevakter. Est. innsparing: kr 380 000.',
             0.96, 'GODKJENT', 'Avtale inngått med enhetsleder om direkte prioritering via bemanningssenteret.',
-            'Enhetsleder Slettheia Bofellesskap', '10.140.45.88'
+            'Enhetsleder Kommunal Boenhet', '10.140.45.88'
         ),
         (
             '2024-08-22 14:45:00', '2540', 'Antigravity-EPM-v2.4', 1285614.0,

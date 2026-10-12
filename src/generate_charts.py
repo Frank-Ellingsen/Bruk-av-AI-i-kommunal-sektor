@@ -6,7 +6,7 @@ KRISTIANSAND KOMMUNE - GENERATOR FOR EPM OG FRAMSIKT GRAFER
 ===============================================================================
 Genererer 3 profesjonelle grafer i henhold til Edward Tuftes Data-Ink standarder:
 1. 'reports/chart_bomiljo_monthly.png': Månedlig utvikling og Net Zero tiltaksbane (Jan-Des).
-2. 'reports/chart_komskole_units.png': Horisontale avvik per enhet for Mevold Skole.
+2. 'reports/chart_komskole_units.png': Horisontale avvik per enhet for Kommunal Skole.
 3. 'reports/chart_netzero_waterfall.png': Vannfallsdiagram fra Run-Rate sprekk til Net Zero balanse.
 ===============================================================================
 """
@@ -68,7 +68,7 @@ def generate_charts():
     # Fyllområde som viser innsparingseffekten
     ax.fill_between(x[7:], with_actions[7:], run_rate[7:], color='#DCFCE7', alpha=0.5, label='Realisert tiltakseffekt (1,93 mill)')
 
-    ax.set_title('Slettheia Bofellesskap: Månedlig Forløp, Februarsjokk og Net Zero Tiltaksbane (mill. kr)', fontsize=11, fontweight='bold', color='#0F172A', pad=12)
+    ax.set_title('Kommunal Boenhet: Månedlig Forløp, Februarsjokk og Net Zero Tiltaksbane (mill. kr)', fontsize=11, fontweight='bold', color='#0F172A', pad=12)
     ax.set_xticks(x)
     ax.set_xticklabels(months, fontsize=9)
     ax.set_ylabel('Kostnad (mill. kr)', fontsize=9, color='#475569')
@@ -110,7 +110,7 @@ def generate_charts():
     ax.set_yticks(y)
     ax.set_yticklabels(units, fontsize=9, fontweight='medium')
     ax.set_xlabel('Avvik YTD 2. Tertial (tusen kr) — Negativt = Overforbruk', fontsize=9, color='#475569')
-    ax.set_title('Mevold Grunnskole: Avvik per Enhet per 2. Tertial (tusen kr)', fontsize=11, fontweight='bold', color='#0F172A', pad=12)
+    ax.set_title('Kommunal Skole: Avvik per Enhet per 2. Tertial (tusen kr)', fontsize=11, fontweight='bold', color='#0F172A', pad=12)
     
     # Direkte merking på stolpene (Tufte-prinsipp)
     for bar, val in zip(bars, variances):

@@ -65,7 +65,7 @@ in
 
 // 4. FACT_REGNSKAP (Innlesting og normalisering fra BoMiljø.csv og Komskole.csv)
 let
-    // --- Del 1: Slettheia Bofellesskap (BOOM) ---
+    // --- Del 1: Kommunal Boenhet (BOOM) ---
     StiBoMiljo = ProsjektSti & "\data\BoMiljø.csv",
     KildeBoMiljo = Csv.Document(File.Contents(StiBoMiljo),[Delimiter=",", Columns=17, Encoding=65001, QuoteStyle=QuoteStyle.None]),
     PromoterteBoMiljo = Table.PromoteHeaders(KildeBoMiljo, [PromoteAllScalars=true]),
@@ -86,7 +86,7 @@ let
         "Kontokode", "Kontonavn", "Budsjett", "Regnskap", "Avvik", "Merforbruk"
     }),
 
-    // --- Del 2: Mevold Grunnskole (Åseral / Komskole) ---
+    // --- Del 2: Kommunal Skole (Komskole) ---
     StiSkole = ProsjektSti & "\data\Komskole.csv",
     KildeSkole = Csv.Document(File.Contents(StiSkole),[Delimiter=",", Encoding=1252, QuoteStyle=QuoteStyle.None]),
     SkoleData = Table.Skip(KildeSkole, 3),
@@ -104,7 +104,7 @@ let
     SkoleDatoKey = Table.AddColumn(SkoleTall, "dato_key", each 20250801, Int64.Type),
     SkoleFunksjon = Table.AddColumn(SkoleDatoKey, "funksjon_kode", each Text.Trim([Funksjon_Raw]), type text),
     SkoleAnsvar = Table.AddColumn(SkoleFunksjon, "ansvar_kode", each 
-        if Text.Contains([Lokasjon], "Åseral") then "2020"
+        if Text.Contains([Lokasjon], "Kommunal Skole") or Text.Contains([Lokasjon], "Skole") then "2020"
         else if Text.Contains([Lokasjon], "SFO") then "2021"
         else if Text.Contains([Lokasjon], "voksenopplæring") then "2130"
         else if Text.Contains([Lokasjon], "PPT") then "2029"

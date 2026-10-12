@@ -7,7 +7,7 @@ KRISTIANSAND KOMMUNE - GENERATOR FOR KOMPLETT EPM PDF RAPPORT
 Genererer en offisiell, publiseringsklar styringsrapport i A4 liggende (landscape):
 'reports/Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pdf'
 Inneholder full status, prognoser, tiltak og månedlig tiltakseffekt (Net Zero EOY)
-for Slettheia Bofellesskap og Mevold Grunnskole.
+for Kommunal Boenhet og Kommunal Skole.
 ===============================================================================
 """
 
@@ -176,7 +176,7 @@ def build_pdf():
     # =========================================================================
     story.append(p("KRISTIANSAND KOMMUNE | ØKONOMI- OG VIRKSOMHETSSTYRING (EPM)", style_sec_small))
     story.append(p("Tertialrapport 2. Tertial 2026: Helårsprognoser og Tiltaksplan for Net Zero Budsjettbalanse", style_title))
-    story.append(p("Ansvarlig: Frank Ellingsen (Senior BI Specialist & Financial Controller) | Omfatter: Slettheia Bofellesskap & Mevold Grunnskole | Mål: 0 kr i helårsavvik", style_subtitle))
+    story.append(p("Ansvarlig: Frank Ellingsen (Senior BI Specialist & Financial Controller) | Omfatter: Kommunal Boenhet & Kommunal Skole | Mål: 0 kr i helårsavvik", style_subtitle))
     story.append(HRFlowable(width="100%", thickness=1, color=C_BORDER, spaceAfter=8))
 
     # Nøkkeltall kort
@@ -206,8 +206,8 @@ def build_pdf():
     story.append(p("1. Konsolidert Hovedoversikt over Virksomhetsenhetene", style_sec))
     t1_data = [
         [p("Virksomhetsenhet / Sektor", style_th), p("Årsbudsjett", style_th_r), p("Budsjett YTD", style_th_r), p("Regnskap YTD", style_th_r), p("Avvik YTD", style_th_r), p("Avvik %", style_th_r), p("Run-Rate EOY", style_th_r), p("Tiltak T3", style_th_r), p("EOY Balansert", style_th_r)],
-        [p("Slettheia Bofellesskap (Helse)", style_td), p("17 233 691 kr", style_td_r), p("11 337 237 kr", style_td_r), p("12 622 851 kr", style_td_r), p("-1 285 614 kr", style_td_alert), p("-11,3 %", style_td_alert), p("19 162 112 kr", style_td_r), p("+1 928 421 kr", style_td_green), p("17 233 691 kr (0 kr)", style_td_green)],
-        [p("Mevold Grunnskole (Oppvekst)", style_td), p("27 490 000 kr", style_td_r), p("17 958 000 kr", style_td_r), p("18 902 000 kr", style_td_r), p("-944 000 kr", style_td_alert), p("-5,3 %", style_td_alert), p("28 353 000 kr", style_td_r), p("+1 416 000 kr", style_td_green), p("27 490 000 kr (0 kr)", style_td_green)],
+        [p("Kommunal Boenhet (Helse)", style_td), p("17 233 691 kr", style_td_r), p("11 337 237 kr", style_td_r), p("12 622 851 kr", style_td_r), p("-1 285 614 kr", style_td_alert), p("-11,3 %", style_td_alert), p("19 162 112 kr", style_td_r), p("+1 928 421 kr", style_td_green), p("17 233 691 kr (0 kr)", style_td_green)],
+        [p("Kommunal Skole (Oppvekst)", style_td), p("27 490 000 kr", style_td_r), p("17 958 000 kr", style_td_r), p("18 902 000 kr", style_td_r), p("-944 000 kr", style_td_alert), p("-5,3 %", style_td_alert), p("28 353 000 kr", style_td_r), p("+1 416 000 kr", style_td_green), p("27 490 000 kr (0 kr)", style_td_green)],
         [p("<b>TOTALT KONSOLIDERT</b>", style_th), p("<b>44 723 691 kr</b>", style_th_r), p("<b>29 295 237 kr</b>", style_th_r), p("<b>31 524 851 kr</b>", style_th_r), p("<b>-2 229 614 kr</b>", style_td_alert), p("<b>-7,6 %</b>", style_td_alert), p("<b>47 515 112 kr</b>", style_th_r), p("<b>+3 344 421 kr</b>", style_td_green), p("<b>44 723 691 kr (0 kr)</b>", style_td_green)]
     ]
     t1 = Table(t1_data, colWidths=[5.5*cm, 2.7*cm, 2.7*cm, 2.7*cm, 2.7*cm, 1.8*cm, 2.8*cm, 2.7*cm, 3.1*cm])
@@ -231,10 +231,10 @@ def build_pdf():
     story.append(PageBreak())
 
     # =========================================================================
-    # SIDE 2: BOMILJØ (SLETTHEIA BOFELLESSKAP) - STATUS & FRAMSIKT FUNN
+    # SIDE 2: BOMILJØ (KOMMUNAL BOENHET) - STATUS & FRAMSIKT FUNN
     # =========================================================================
     story.append(p("KRISTIANSAND KOMMUNE | ENHETSRAPPORT HELSE OG MESTRING", style_sec_small))
-    story.append(p("Slettheia Bofellesskap: Avviksdiagnose & Månedlig Forløp (Framsikt)", style_title))
+    story.append(p("Kommunal Boenhet: Avviksdiagnose & Månedlig Forløp (Framsikt)", style_title))
     story.append(p("Døgnbemannet tilrettelagt bolig (KOSTRA 254) | Data kilde: Visma Enterprise & Framsikt | Akkumulert merforbruk T2: -1 285 614 kr (-11,3 %)", style_subtitle))
     story.append(HRFlowable(width="100%", thickness=1, color=C_BORDER, spaceAfter=8))
 
@@ -298,7 +298,7 @@ def build_pdf():
     # SIDE 3: BOMILJØ - TILTAKSPLAN & VEIEN TIL NET ZERO
     # =========================================================================
     story.append(p("KRISTIANSAND KOMMUNE | KORRIGERENDE TILTAKSPLAN FOR HELSE", style_sec_small))
-    story.append(p("Slettheia Bofellesskap: Tiltakspakke og Månedlig Net Zero Lukking", style_title))
+    story.append(p("Kommunal Boenhet: Tiltakspakke og Månedlig Net Zero Lukking", style_title))
     story.append(p("Forpliktende innsparing i 3. tertial (September - Desember) for å nå 0 kr i årsavvik per 31.12.2026", style_subtitle))
     story.append(HRFlowable(width="100%", thickness=1, color=C_BORDER, spaceAfter=8))
 
@@ -310,7 +310,7 @@ def build_pdf():
         [p("B3", style_td), p("Restriktiv overtidskontroll: Krav om forhåndsgodkjenning av enhetsleder", style_td), p("104000", style_td), p("Enhetsleder", style_td), p("95 000 kr / mnd", style_td_r), p("380 000 kr", style_td_green), p("Automatisk varsel i Visma Enterprise ved overtid", style_td)],
         [p("B4", style_td), p("Intensivert sykefraværsoppfølging (IA) og full avstemming av NAV-sykepenger", style_td), p("102000/1690", style_td), p("HR / Enhetsleder", style_td), p("100 000 kr / mnd", style_td_r), p("400 000 kr", style_td_green), p("Månedlig avstemming mot NAV/Altinn", style_td)],
         [p("B5", style_td), p("Søknad om toppfinansiering ressurskrevende tjenester for 2 beboere m/ 2:1-bemanning", style_td), p("170000", style_td), p("Kommunalsjef", style_td), p("Engangsoppgjør", style_td_r), p("208 421 kr", style_td_green), p("Helse- og omsorgsdepartementets refusjonsordning", style_td)],
-        [p("<b>SUM</b>", style_th), p("<b>SAMLET TILTAKSEFFEKT SLETTHEIA BOFELLESSKAP</b>", style_th), p("<b>Flere</b>", style_th), p("<b>Lederteam</b>", style_th), p("<b>430 000 kr/mnd</b>", style_th_r), p("<b>1 928 421 kr</b>", style_td_green), p("<b>Garanterer 100 % budsjettbalanse (0 kr)</b>", style_th)]
+        [p("<b>SUM</b>", style_th), p("<b>SAMLET TILTAKSEFFEKT KOMMUNAL BOENHET</b>", style_th), p("<b>Flere</b>", style_th), p("<b>Lederteam</b>", style_th), p("<b>430 000 kr/mnd</b>", style_th_r), p("<b>1 928 421 kr</b>", style_td_green), p("<b>Garanterer 100 % budsjettbalanse (0 kr)</b>", style_th)]
     ]
     t_tb_pdf = Table(t_actions_bom, colWidths=[1.0*cm, 7.8*cm, 2.2*cm, 2.8*cm, 3.0*cm, 3.0*cm, 6.7*cm])
     t_tb_pdf.setStyle(TableStyle([
@@ -326,7 +326,7 @@ def build_pdf():
     story.append(Spacer(1, 10))
 
     # Månedlig balanseringsprofil Sept-Des
-    story.append(p("Månedlig Balanseringsbane mot 31.12.2026 (Slettheia Bofellesskap)", style_sec))
+    story.append(p("Månedlig Balanseringsbane mot 31.12.2026 (Kommunal Boenhet)", style_sec))
     t_bal_data = [
         [p("Periode", style_th), p("Vedtatt Budsjett", style_th_r), p("Run-Rate Kostnad", style_th_r), p("Tiltakseffekt T3", style_th_r), p("Justert Regnskap", style_th_r), p("Månedlig Avvik", style_th_r), p("Akkumulert Avvik EOY", style_th_r)],
         [p("Januar - August (T2)", style_td), p("11 337 237 kr", style_td_r), p("12 622 851 kr", style_td_r), p("0 kr", style_td_r), p("12 622 851 kr", style_td_r), p("-1 285 614 kr", style_td_alert), p("-1 285 614 kr", style_td_alert)],
@@ -351,10 +351,10 @@ def build_pdf():
     story.append(PageBreak())
 
     # =========================================================================
-    # SIDE 4: KOMSKOLE (MEVOLD GRUNNSKOLE) - STATUS & ENHETSFORDELING
+    # SIDE 4: KOMSKOLE (KOMMUNAL SKOLE) - STATUS & ENHETSFORDELING
     # =========================================================================
     story.append(p("KRISTIANSAND KOMMUNE | ENHETSRAPPORT OPPVEKST", style_sec_small))
-    story.append(p("Mevold Grunnskole: Avviksfordeling per Enhet og Kontotype (Framsikt)", style_title))
+    story.append(p("Kommunal Skole: Avviksfordeling per Enhet og Kontotype (Framsikt)", style_title))
     story.append(p("Skole og oppvekst (KOSTRA 202) | Data kilde: Framsikt / Visma | Akkumulert merforbruk T2: -944 000 kr (-5,3 %)", style_subtitle))
     story.append(HRFlowable(width="100%", thickness=1, color=C_BORDER, spaceAfter=8))
 
@@ -369,7 +369,7 @@ def build_pdf():
         [p("Skoleskyss", style_td), p("469 000 kr", style_td_r), p("516 000 kr", style_td_r), p("+47 000 kr", style_td_green), p("+9,1 %", style_td_green), p("775 000 kr", style_td_r), p("60,5 %", style_td_r), p("✓ Effektiv ruteplanlegging", style_td)],
         [p("PPT-tjeneste", style_td), p("286 000 kr", style_td_r), p("350 000 kr", style_td_r), p("+64 000 kr", style_td_green), p("+18,3 %", style_td_green), p("700 000 kr", style_td_r), p("40,9 %", style_td_r), p("✓ Vakanser i psykolog/rådgiverstillinger", style_td)],
         [p("Leirskole / Ekskursjoner", style_td), p("124 000 kr", style_td_r), p("124 000 kr", style_td_r), p("0 kr", style_td_r), p("0,0 %", style_td_r), p("124 000 kr", style_td_r), p("100,0 %", style_td_r), p("Fullt avregnet i T2", style_td)],
-        [p("<b>TOTALT MEVOLD SKOLE</b>", style_th), p("<b>18 902 000 kr</b>", style_th_r), p("<b>17 958 000 kr</b>", style_th_r), p("<b>-944 000 kr</b>", style_td_alert), p("<b>-5,3 %</b>", style_td_alert), p("<b>27 490 000 kr</b>", style_th_r), p("<b>68,8 %</b>", style_th_r), p("<b>🚩 Samlet merforbruk per 2. tertial</b>", style_th)]
+        [p("<b>TOTALT KOMMUNAL SKOLE</b>", style_th), p("<b>18 902 000 kr</b>", style_th_r), p("<b>17 958 000 kr</b>", style_th_r), p("<b>-944 000 kr</b>", style_td_alert), p("<b>-5,3 %</b>", style_td_alert), p("<b>27 490 000 kr</b>", style_th_r), p("<b>68,8 %</b>", style_th_r), p("<b>🚩 Samlet merforbruk per 2. tertial</b>", style_th)]
     ]
     t_sk_pdf = Table(skole_matrise_pdf, colWidths=[4.2*cm, 2.7*cm, 2.7*cm, 2.4*cm, 1.8*cm, 2.7*cm, 2.0*cm, 8.0*cm])
     t_sk_pdf.setStyle(TableStyle([
@@ -384,7 +384,7 @@ def build_pdf():
     story.append(t_sk_pdf)
     story.append(Spacer(1, 8))
 
-    # Graf: Enhetsavvik for Mevold skole
+    # Graf: Enhetsavvik for Kommunal skole
     chart_kom = REPORTS_DIR / "chart_komskole_units.png"
     if chart_kom.exists():
         story.append(Image(str(chart_kom), width=26.5*cm, height=6.8*cm))
@@ -395,7 +395,7 @@ def build_pdf():
     # SIDE 5: KOMSKOLE - TILTAKSPLAN & VEIEN TIL NET ZERO
     # =========================================================================
     story.append(p("KRISTIANSAND KOMMUNE | KORRIGERENDE TILTAKSPLAN FOR OPPVEKST", style_sec_small))
-    story.append(p("Mevold Grunnskole: Tiltakspakke og Månedlig Net Zero Lukking", style_title))
+    story.append(p("Kommunal Skole: Tiltakspakke og Månedlig Net Zero Lukking", style_title))
     story.append(p("Forpliktende innsparing i 3. tertial (September - Desember) for å nå 0 kr i årsavvik per 31.12.2026", style_subtitle))
     story.append(HRFlowable(width="100%", thickness=1, color=C_BORDER, spaceAfter=8))
 
@@ -407,7 +407,7 @@ def build_pdf():
         [p("S3", style_td), p("Innkjøpsfrys på IKT-utstyr, nye læremidler, inventar og administrative driftsmidler", style_td), p("Drift / 1110-1200", style_td), p("Rektor / Admin", style_td), p("50 000 kr / mnd", style_td_r), p("200 000 kr", style_td_green), p("Kun akutt sikkerhetsmateriell godkjennes", style_td)],
         [p("S4", style_td), p("Aktiv purring og full avstemming av utestående NAV sykelønnsrefusjoner", style_td), p("Refusjon / 1690", style_td), p("Skolesekretær/HR", style_td), p("Løpende Altinn", style_td_r), p("250 000 kr", style_td_green), p("Avstemt med NAV forvaltning; innbetaling sikret", style_td)],
         [p("S5", style_td), p("Samordning av spesialpedagogiske timer og assistentressurser på tvers av trinn", style_td), p("Spes.und / 1010", style_td), p("Avdelingsleder", style_td), p("41 500 kr / mnd", style_td_r), p("166 000 kr", style_td_green), p("Drøftet med PPT og skolehelsetjenesten", style_td)],
-        [p("<b>SUM</b>", style_th), p("<b>SAMLET TILTAKSEFFEKT MEVOLD GRUNNSKOLE</b>", style_th), p("<b>Flere</b>", style_th), p("<b>Rektor / Team</b>", style_th), p("<b>354 000 kr/mnd</b>", style_th_r), p("<b>1 416 000 kr</b>", style_td_green), p("<b>Garanterer 100 % budsjettbalanse (0 kr)</b>", style_th)]
+        [p("<b>SUM</b>", style_th), p("<b>SAMLET TILTAKSEFFEKT KOMMUNAL SKOLE</b>", style_th), p("<b>Flere</b>", style_th), p("<b>Rektor / Team</b>", style_th), p("<b>354 000 kr/mnd</b>", style_th_r), p("<b>1 416 000 kr</b>", style_td_green), p("<b>Garanterer 100 % budsjettbalanse (0 kr)</b>", style_th)]
     ]
     t_tsk_pdf = Table(t_actions_skole, colWidths=[1.0*cm, 7.8*cm, 2.5*cm, 2.8*cm, 2.8*cm, 2.8*cm, 6.8*cm])
     t_tsk_pdf.setStyle(TableStyle([
@@ -423,7 +423,7 @@ def build_pdf():
     story.append(Spacer(1, 10))
 
     # Månedlig balanseringsprofil for skolen
-    story.append(p("Månedlig Balanseringsbane mot 31.12.2026 (Mevold Grunnskole)", style_sec))
+    story.append(p("Månedlig Balanseringsbane mot 31.12.2026 (Kommunal Skole)", style_sec))
     t_sk_bal = [
         [p("Periode", style_th), p("Vedtatt Budsjett", style_th_r), p("Run-Rate Kostnad", style_th_r), p("Tiltakseffekt T3", style_th_r), p("Justert Regnskap", style_th_r), p("Månedlig Avvik", style_th_r), p("Akkumulert Avvik EOY", style_th_r)],
         [p("Januar - August (T2)", style_td), p("17 958 000 kr", style_td_r), p("18 902 000 kr", style_td_r), p("0 kr", style_td_r), p("18 902 000 kr", style_td_r), p("-944 000 kr", style_td_alert), p("-944 000 kr", style_td_alert)],
@@ -457,7 +457,7 @@ def build_pdf():
 
     # Master Tabell
     master_tab_data = [
-        [p("Tiltakskategori / Hovedområde", style_th), p("Slettheia Bofellesskap", style_th_r), p("Mevold Grunnskole", style_th_r), p("Samlet Effekt T3", style_th_r), p("Månedlig Takt", style_th_r), p("Garantist & Kontrollorgan", style_th)],
+        [p("Tiltakskategori / Hovedområde", style_th), p("Kommunal Boenhet", style_th_r), p("Kommunal Skole", style_th_r), p("Samlet Effekt T3", style_th_r), p("Månedlig Takt", style_th_r), p("Garantist & Kontrollorgan", style_th)],
         [p("1. Vikarrestriksjoner & Stans i Eksterne Byråer", style_td), p("500 000 kr", style_td_r), p("500 000 kr", style_td_r), p("1 000 000 kr", style_td_green), p("250 000 kr / mnd", style_td_r), p("Enhetsledere / HR Bemanningssenter", style_td)],
         [p("2. Turnusomlegging, Overtidsstopp & Timeplanrevisjon", style_td), p("820 000 kr", style_td_r), p("300 000 kr", style_td_r), p("1 120 000 kr", style_td_green), p("280 000 kr / mnd", style_td_r), p("Avdelingsledere / Tillitsvalgte", style_td)],
         [p("3. Innkjøpsfrys på Driftsmateriell, IKT & Inventar", style_td), p("0 kr", style_td_r), p("200 000 kr", style_td_r), p("200 000 kr", style_td_green), p("50 000 kr / mnd", style_td_r), p("Økonomiavdelingen / Fakturakontroll", style_td)],

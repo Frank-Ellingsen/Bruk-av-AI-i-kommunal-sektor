@@ -131,7 +131,7 @@ def create_deck():
     p.space_before = Pt(12)
 
     p = tf1.add_paragraph()
-    p.text = "Diagnose, avviksdrivere og tiltaksprofil for Slettheia Bofellesskap og Mevold Grunnskole\nMål: Net Zero differanse mellom regnskap og budsjett per 31.12.2026"
+    p.text = "Diagnose, avviksdrivere og tiltaksprofil for Kommunal Boenhet og Kommunal Skole\nMål: Net Zero differanse mellom regnskap og budsjett per 31.12.2026"
     p.font.size = Pt(14)
     p.font.color.rgb = RGBColor(203, 213, 225)
     p.space_before = Pt(14)
@@ -157,8 +157,8 @@ def create_deck():
     # Hovedtabell
     rows_s2 = [
         ["Enhet / Område", "YTD Budsjett", "YTD Regnskap", "YTD Avvik", "Avvik %", "EOY Uendret Drift", "Tiltak T3 (Sept-Des)", "EOY Balansert"],
-        ["Slettheia Bofellesskap (Helse)", "11 337 237 kr", "12 622 851 kr", "-1 285 614 kr", "-11,3 %", "19 162 112 kr", "+1 928 421 kr", "17 233 691 kr (0 kr)"],
-        ["Mevold Grunnskole (Oppvekst)", "17 958 000 kr", "18 902 000 kr", "-944 000 kr", "-5,3 %", "28 353 000 kr", "+1 416 000 kr", "27 490 000 kr (0 kr)"],
+        ["Kommunal Boenhet (Helse)", "11 337 237 kr", "12 622 851 kr", "-1 285 614 kr", "-11,3 %", "19 162 112 kr", "+1 928 421 kr", "17 233 691 kr (0 kr)"],
+        ["Kommunal Skole (Oppvekst)", "17 958 000 kr", "18 902 000 kr", "-944 000 kr", "-5,3 %", "28 353 000 kr", "+1 416 000 kr", "27 490 000 kr (0 kr)"],
         ["TOTALT KONSOLIDERT", "29 295 237 kr", "31 524 851 kr", "-2 229 614 kr", "-7,6 %", "47 515 112 kr", "+3 344 421 kr", "44 723 691 kr (0 kr)"]
     ]
 
@@ -205,7 +205,7 @@ def create_deck():
 
     points = [
         "1. Uendret drift vil gi et samlet underskudd på -3,34 mill. kr ved årsslutt, noe som utløser formell varslingsplikt til Bystyret jf. Kommuneloven § 14-5.",
-        "2. Årsakene er strukturelle og operasjonelle: Slettheia Bofellesskap er tynget av eksterne vikarbyråer og turnusovertid, mens Mevold Grunnskole har lærervikarmerforbruk.",
+        "2. Årsakene er strukturelle og operasjonelle: Kommunal Boenhet er tynget av eksterne vikarbyråer og turnusovertid, mens Kommunal Skole har lærervikarmerforbruk.",
         "3. Løsningen er en forpliktende tiltaksplan i T3 (september-desember) med månedlig sparing på totalt 3,34 mill. kr mot run-rate trend for å sikre Net Zero i årsavvik."
     ]
     for pt in points:
@@ -219,7 +219,7 @@ def create_deck():
     # SLIDE 3: BOMILJØ - STATUS OG AVVIKSANALYSE (FRAMSIKT VIEW)
     # =========================================================================
     s3 = prs.slides.add_slide(blank_layout)
-    add_header(s3, "Slettheia Bofellesskap: Status og Avviksanalyse Jan–Aug 2026")
+    add_header(s3, "Kommunal Boenhet: Status og Avviksanalyse Jan–Aug 2026")
 
     # Kort
     add_card(s3, 0.8, 1.6, 2.7, 1.1, "Budsjett YTD (Aug)", "11,34 mill. kr", "11 337 125 kr")
@@ -306,7 +306,7 @@ def create_deck():
     # SLIDE 4: BOMILJØ - HELÅRSPROGNOSE & VEIEN TIL NET ZERO
     # =========================================================================
     s4 = prs.slides.add_slide(blank_layout)
-    add_header(s4, "Slettheia Bofellesskap: Helårsprognose og Nødvendig Tiltaksbane")
+    add_header(s4, "Kommunal Boenhet: Helårsprognose og Nødvendig Tiltaksbane")
 
     add_card(s4, 0.8, 1.6, 2.7, 1.1, "Vedtatt Årsbudsjett", "17,23 mill. kr", "Bystyrets vedtatte ramme")
     add_card(s4, 3.8, 1.6, 2.7, 1.1, "EOY Run-Rate Prognose", "19,16 mill. kr", "Fremskriving uten tiltak", alert=True)
@@ -354,7 +354,7 @@ def create_deck():
     # SLIDE 5: BOMILJØ - MÅNEDLIG EFFEKTPROFIL SEPT-DES (NET ZERO LUKKING)
     # =========================================================================
     s5 = prs.slides.add_slide(blank_layout)
-    add_header(s5, "Slettheia Bofellesskap: Månedlig Balanseringsprofil Sept–Des")
+    add_header(s5, "Kommunal Boenhet: Månedlig Balanseringsprofil Sept–Des")
 
     add_card(s5, 0.8, 1.6, 3.6, 1.1, "Akkumulert Merforbruk T2", "-1 285 614 kr", "Historisk per 31.08.2026", alert=True)
     add_card(s5, 4.8, 1.6, 3.6, 1.1, "Budsjettramme T3 (Sept-Des)", "5 896 454 kr", "Maksimalt tillatt forbruk: 4 610 840 kr")
@@ -405,7 +405,7 @@ def create_deck():
     # SLIDE 6: KOMSKOLE - STATUS OG ENHETSFORDELING (FRAMSIKT VIEW)
     # =========================================================================
     s6 = prs.slides.add_slide(blank_layout)
-    add_header(s6, "Mevold Grunnskole: Status og Enhetsfordeling 2. Tertial 2026")
+    add_header(s6, "Kommunal Skole: Status og Enhetsfordeling 2. Tertial 2026")
 
     add_card(s6, 0.8, 1.6, 2.7, 1.1, "Budsjett hiå (T2)", "17,96 mill. kr", "17 958 000 kr")
     add_card(s6, 3.8, 1.6, 2.7, 1.1, "Regnskap hiå (T2)", "18,90 mill. kr", "18 902 000 kr")
@@ -423,7 +423,7 @@ def create_deck():
         ["Skoleskyss", "469 000 kr", "516 000 kr", "+47 000 kr", "+9,1 %", "775 000 kr", "60,5 %", "✓ Under ramme"],
         ["PPT (Pedagogisk-psykologisk)", "286 000 kr", "350 000 kr", "+64 000 kr", "+18,3 %", "700 000 kr", "40,9 %", "✓ Under ramme"],
         ["Ekskursjonar / Leirskule", "124 000 kr", "124 000 kr", "0 kr", "0,0 %", "124 000 kr", "100,0 %", "I balanse"],
-        ["TOTALT MEVOLD SKOLE", "18 902 000 kr", "17 958 000 kr", "-944 000 kr", "-5,3 %", "27 490 000 kr", "68,8 %", "🚩 Totalt avvik"]
+        ["TOTALT KOMMUNAL SKOLE", "18 902 000 kr", "17 958 000 kr", "-944 000 kr", "-5,3 %", "27 490 000 kr", "68,8 %", "🚩 Totalt avvik"]
     ]
     t_sk = s6.shapes.add_table(len(skole_matrise), len(skole_matrise[0]), Inches(0.8), Inches(3.0), Inches(11.733), Inches(3.8))
     t_sk.table.columns[0].width = Inches(2.7)
@@ -458,7 +458,7 @@ def create_deck():
     # SLIDE 7: KOMSKOLE - KONTOTYPE & REFUSJONSDYPDYKK
     # =========================================================================
     s7 = prs.slides.add_slide(blank_layout)
-    add_header(s7, "Mevold Grunnskole: Kontotype- og Refusjonsanalyse (Framsikt)")
+    add_header(s7, "Kommunal Skole: Kontotype- og Refusjonsanalyse (Framsikt)")
 
     # Venstre boks: Kontotype avvik
     box_l = s7.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.2))
@@ -531,7 +531,7 @@ def create_deck():
     # SLIDE 8: KOMSKOLE - TILTAKSPLAN & VEIEN TIL NET ZERO
     # =========================================================================
     s8 = prs.slides.add_slide(blank_layout)
-    add_header(s8, "Mevold Grunnskole: Helårsprognose og Tiltaksplan for Net Zero")
+    add_header(s8, "Kommunal Skole: Helårsprognose og Tiltaksplan for Net Zero")
 
     add_card(s8, 0.8, 1.6, 2.7, 1.1, "Vedtatt Årsbudsjett", "27,49 mill. kr", "27 490 000 kr")
     add_card(s8, 3.8, 1.6, 2.7, 1.1, "EOY Run-Rate Prognose", "28,35 mill. kr", "Uendret drift (sprekk)", alert=True)
@@ -546,7 +546,7 @@ def create_deck():
         ["S3", "Innkjøpsstopp for IKT-utstyr, lærebøker & forbruk", "Drift / 1110-1200", "Rektor", "50 000 kr/mnd", "200 000 kr", "Full innkjøpsfrys"],
         ["S4", "Full avstemming og purring av NAV sykelønnsrefusjon", "Refusjon / 1690", "Skolesekretær/HR", "Aktiv purring", "250 000 kr", "Altinn/NAV avstemt"],
         ["S5", "Samordning av spesialpedagogiske timer på tvers av trinn", "Spes.und / 1010", "Avdelingsleder", "41 500 kr/mnd", "166 000 kr", "PPT samråd"],
-        ["SUM", "SAMLET TILTAKSEFFEKT MEVOLD GRUNNSKOLE (T3)", "Flere", "Rektor / Ledergruppe", "-", "1 416 000 kr", "Vedtak iverksatt"]
+        ["SUM", "SAMLET TILTAKSEFFEKT KOMMUNAL SKOLE (T3)", "Flere", "Rektor / Ledergruppe", "-", "1 416 000 kr", "Vedtak iverksatt"]
     ]
     t_tsk = s8.shapes.add_table(len(tiltak_skole), len(tiltak_skole[0]), Inches(0.8), Inches(3.0), Inches(11.733), Inches(3.8))
     t_tsk.table.columns[0].width = Inches(0.6)
@@ -581,14 +581,14 @@ def create_deck():
     s9 = prs.slides.add_slide(blank_layout)
     add_header(s9, "Konsolidert Tiltaksmatrise & Net Zero Regnskapsavslutning 31.12")
 
-    add_card(s9, 0.8, 1.6, 2.7, 1.1, "Samlet Årsbudsjett", "44,72 mill. kr", "Slettheia + Mevold")
+    add_card(s9, 0.8, 1.6, 2.7, 1.1, "Samlet Årsbudsjett", "44,72 mill. kr", "Kommunal Boenhet + Kommunal Skole")
     add_card(s9, 3.8, 1.6, 2.7, 1.1, "Run-Rate EOY (Før tiltak)", "47,52 mill. kr", "-3,34 mill. kr merforbruk", alert=True)
     add_card(s9, 6.8, 1.6, 2.7, 1.1, "Samlet Tiltakspakke", "+3,34 mill. kr", "Realisering Sept–Des", green=True)
     add_card(s9, 9.8, 1.6, 2.7, 1.1, "SLUTTRESULTAT 31.12", "0,00 kr", "Eksakt Net Zero balanse", green=True)
 
     # Master Tabell
     kons_data = [
-        ["Hovedpost / Tiltakskategori", "Slettheia Bofellesskap", "Mevold Grunnskole", "Samlet Effekt T3", "Månedlig Takt (Sept-Des)", "Garantist / Kontroll"],
+        ["Hovedpost / Tiltakskategori", "Kommunal Boenhet", "Kommunal Skole", "Samlet Effekt T3", "Månedlig Takt (Sept-Des)", "Garantist / Kontroll"],
         ["1. Vikarrestriksjoner & Stopp i Eksterne Byråer", "500 000 kr", "500 000 kr", "1 000 000 kr", "250 000 kr / mnd", "Enhetsledere / HR"],
         ["2. Turnusomlegging, Overtidsstopp & Timeplanoptimalisering", "820 000 kr", "300 000 kr", "1 120 000 kr", "280 000 kr / mnd", "Avdelingsledere / Tillitsvalgte"],
         ["3. Driftsreduksjon & Full Innkjøpsfrys (IKT/materiell)", "0 kr", "200 000 kr", "200 000 kr", "50 000 kr / mnd", "Økonomiavdelingen"],

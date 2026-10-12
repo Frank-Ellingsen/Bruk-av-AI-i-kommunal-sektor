@@ -6,8 +6,8 @@
 ## 1. SYSTEMARKITEKTUR & SAMSVARSRANME (ANTIGRAVITY SCOPE)
 
 Dette dokumentet definerer spesifikasjonen for **Antigravity EPM Framework** tilpasset Kristiansand kommune. Løsningen dekker hele styringssløyfen for to representative kommunale virksomheter:
-1. **Kommunal Skole (Oppvekstsektoren):** Mevold Grunnskole – Rammestyrt enhet med undervisningsplikt, enkeltvedtak og elevrelaterte driftskostnader.
-2. **Kommunal Boenhet (Helse og mestring):** Slettheia Bofellesskap – Brukerstyrt, døgnkontinuerlig enhet (24/7) med turnusdrift, vikarbehov og ressurskrevende brukere.
+1. **Kommunal Skole (Oppvekstsektoren):** Kommunal Skole – Rammestyrt enhet med undervisningsplikt, enkeltvedtak og elevrelaterte driftskostnader.
+2. **Kommunal Boenhet (Helse og mestring):** Kommunal Boenhet – Brukerstyrt, døgnkontinuerlig enhet (24/7) med turnusdrift, vikarbehov og ressurskrevende brukere.
 
 ### Overordnede systemprinsipper:
 * **Single Source of Truth (SSOT):** Felles kanonisk datamodell forankret i KOSTRAs nasjonale kontoplan.
@@ -104,7 +104,7 @@ in
 
 ### 3.1 Virksomhetsanalyse: Kommunal Skole vs. Kommunal Boenhet
 
-| Analysedimensjon | Kommunal Skole (Mevold Grunnskole) | Kommunal Boenhet (Slettheia Bofellesskap) |
+| Analysedimensjon | Kommunal Skole (Kommunal Skole) | Kommunal Boenhet (Kommunal Boenhet) |
 | :--- | :--- | :--- |
 | **Hovedfunksjon (KOSTRA)** | `202 Grunnskoleopplæring` | `254 Hjemmetjenester / Bofellesskap` |
 | **Descriptive (Hva skjedde?)** | Avvik YTD: **+kr 116 000** merforbruk. Høyt forbruk på vikarlønn (art 1020) og skolemateriell. | Avvik YTD: **+kr 243 000** merforbruk. Markant sprek på overtid/helgetillegg (art 1090). |
@@ -175,12 +175,12 @@ En maskinlæringsagent (Python/Isolation Forest) overvåker ukentlige timelister
 
 Dersom EOY-prognosen viser et forventet merforbruk, genererer AI-modellen en **prioritert tiltaksmeny** skreddersydd for den enkelte enhetsleder:
 
-#### Case 1: Kommunal Skole (Mevold Grunnskole)
+#### Case 1: Kommunal Skole (Kommunal Skole)
 1. **Tiltak A (Administrativt):** Automatisk purring og avstemming mot NAV for å fremskynde utbetaling av utestående sykelønnsrefusjoner (forventet likviditetseffekt: kr 28 000).
 2. **Tiltak B (Innkjøp):** Midlertidig frys i ikke-kritiske rammeavtaleinnkjøp på art 1200 fram til T2 (forventet innsparing: kr 15 000).
 3. **Tiltak C (Ressurs):** Optimalisere assistentdekning på tvers av klasserekker i samarbeid med naboskole.
 
-#### Case 2: Kommunal Boenhet (Slettheia Bofellesskap)
+#### Case 2: Kommunal Boenhet (Kommunal Boenhet)
 1. **Tiltak A (Turnus/Vikar):** Obligatorisk bruk av kommunens interne vikarpool framfor eksterne byråer for helgevakter (forventet innsparing: kr 45 000).
 2. **Tiltak B (Refusjonsordning):** Fremme sak om delvis dekning fra *Toppfinansieringsordningen for ressurskrevende tjenester* dersom én bruker krever mer enn 2,1 mill. kr i direkte pleie.
 

@@ -66,7 +66,7 @@ def main():
 
     cases = {
         "CASE-2026-001": {
-            "Enhet": "Mevold Grunnskole",
+            "Enhet": "Kommunal Skole",
             "Sektor": "Oppvekst",
             "KOSTRA_Art": "1020 Sykemeldte vikarer",
             "YTD_Avvik": 47000.0,
@@ -84,7 +84,7 @@ def main():
             "Confidence": 0.94
         },
         "CASE-2026-002": {
-            "Enhet": "Slettheia Bofellesskap",
+            "Enhet": "Kommunal Boenhet",
             "Sektor": "Helse og mestring",
             "KOSTRA_Art": "1090 Overtid helgetillegg",
             "YTD_Avvik": 117000.0,
@@ -158,7 +158,7 @@ def main():
             "REJECTED": "AVVIST"
         }
         leder_beslutning = beslutning_map.get(user_action, "GODKJENT")
-        enhet_kode = "2020" if "Mevold" in case_data["Enhet"] else "2540"
+        enhet_kode = "2020" if "Skole" in case_data["Enhet"] else "2540"
         
         # Bygg fyldig revisjonsnotat med RAG-referanse og saksbehandlers kommentar
         begrunnelse_tekst = f"{user_notes.strip()} | Lovhjemmel: {case_data['Governance_Ref']} | AI-begrunnelse: {' '.join(case_data['AI_Reasoning'][:2])}"
