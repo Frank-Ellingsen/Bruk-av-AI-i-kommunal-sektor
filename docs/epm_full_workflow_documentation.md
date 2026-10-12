@@ -166,4 +166,5 @@ All components of this architecture have been compiled and published to the Stud
 * **HITL Web App:** `hitl_writeback_ui.py` (Streamlit controller interface)
 * **Power Query M Script:** `fxOpenAI_RAG.m` (RAG-grounded Power Query function)
 * **Agent Skills:** `01_...md` through `08_...md` (8 specialized agent skill files)
+* **DAX & Power BI Models:** `docs/dax_kostra_kpi_package.md`, `powerbi/02_DAX_Measures_Library.dax`, `powerbi/04_KOSTRA_DAX_KPI_Package.dax`
 * **Executive Documents:** `saksfremlegg_epm_okonomidirektor.docx`, `use_case_kristiansand_kommune-v4.docx`

@@ -76,7 +76,7 @@ Arkitekturen drives av 8 spesialiserte AI-agenter (beskrevet i [`agents/`](agent
 | Agent | Rolle & Ansvarsområde | Nøkkelleveranse |
 | :--- | :--- | :--- |
 | **01. Data Integration & ETL** | Kilde-agnostisk vask, KOSTRA-ontologi og SQLite-last | `build_golden_record.py` |
-| **02. BI & DAX Modeler** | Stjerneskjemadesign, ISINSCOPE-matriser og EOY-prognoser | DAX-mål i Power BI |
+| **02. BI & DAX Modeler** | Stjerneskjemadesign, KOSTRA-nøkkeltall, ISINSCOPE-matriser og EOY-prognoser | DAX-mål i Power BI & [`dax_kostra_kpi_package.md`](docs/dax_kostra_kpi_package.md) |
 | **03. Predictive Anomaly Agent** | Overvåker timelister mot historikk (2,5 std.avvik terskel) | Tidligvarsel (T-60 dager) |
 | **04. Prescriptive HITL Agent** | Utarbeider prioritert tiltaksmeny for enhetsledere | Tiltak A, B, C per case |
 | **05. Ethics & Governance Gatekeeper** | Sikrer samsvar med EU AI Act, Kommuneloven § 14-5 og HTA § 4 | Stage-Gate validering |
@@ -129,9 +129,13 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 │   └── 08_multilevel_stakeholder_reporting_agent.md
 ├── data/                       # Grunnlagsdata og normaliserte regnskapsfiler
 │   ├── BoMiljø.csv             # Slettheia Bofellesskap (1 056 rader, 12 mnd)
-│   └── Komskole.csv            # Mevold Grunnskole / Åseral (194 rader)
+│   ├── Komskole.csv            # Mevold Grunnskole / Åseral (194 rader)
+│   ├── kostra_kontoplan.csv    # Fullstendig KOSTRA kontoplanhierarki (funksjon & art)
+│   ├── Rapport Enhet Bo og Miljø.xlsx # Framsikt eksportrapport Bo og Miljø
+│   └── Rapport Enhet Skole.xlsx# Framsikt eksportrapport Mevold Skole
 ├── docs/                       # Saksfremlegg, rammeverk og referansedokumenter
 │   ├── antigravity_usecase_epm.md      # Full teknisk og forretningsmessig spesifikasjon
+│   ├── dax_kostra_kpi_package.md       # Full DAX-pakke for KOSTRA & kommunal økonomistyring
 │   ├── epm_full_workflow_documentation.md # End-to-end arkitekturdokumentasjon for EPM AI-agentene
 │   ├── epm_workflow_diagram.png        # Visuelt arbeidsflytdiagram for Kristiansand EPM
 │   ├── saksfremlegg_epm_okonomidirektor.docx
@@ -144,15 +148,18 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 │       └── Rådgiver økonomistyring Kristiansand Kommune - arbeidsplassen.no.pdf
 ├── powerbi/                    # Komplett Power BI & Excel Semantic Model-suite
 │   ├── 01_PowerQuery_M_Code.pq         # Power Query ETL (CSV & SQLite kilder)
-│   ├── 02_DAX_Measures_Library.dax     # YTD, EOY Prognose, Turnus- og Framsikt/Tufte-mål
-│   ├── 03_PowerBI_Model_Architecture.md# Relasjonsguide, RLS & Rapportdesign
+│   ├── 02_DAX_Measures_Library.dax     # YTD, EOY Prognose, KOSTRA- og Tufte-mål
+│   ├── 03_PowerBI_Model_Architecture.md# Relasjonsguide, RLS, KOSTRA KPIs & Rapportdesign
+│   ├── 04_KOSTRA_DAX_KPI_Package.dax   # Produksjonsklar DAX-pakke for KOSTRA & handlingsregler
 │   ├── fxOpenAI_RAG.m                  # Power Query M-funksjon for OpenAI RAG-integrasjon
 │   ├── generate_excel_powerbi_model.py # Generator for konsolidert arbeidsbok
-│   └── Kristiansand_EPM_PowerBI_Model.xlsx # Fullstendig modell for direkte Power BI import
+│   ├── Kristiansand_EPM_PowerBI_Model.xlsx # Fullstendig modell for direkte Power BI import
+│   └── projects/                       # Power BI Desktop Developer Projects (.pbip)
+│       ├── Bo og Miljø enhet project.pbip
+│       └── Skole enhet project.pbip
 ├── artifacts/                  # Genererte byggresultater og rapporter (ikke kildekode)
 │   ├── reports/                # PDF/PPTX/PNG-rapporter og grafiske outputs
 │   └── kristiansand_golden_record.db # Kanonisk SQLite golden-record datasett
-├── data/                       # Kildedata (CSV og andre rådata)
 ├── src/                        # Operativ Python-kildekode
 │   ├── build_golden_record.py  # Hoved-ETL (100 % Python Standard Library)
 │   ├── build_excel_epm_model.py# Generator for master Excel EPM-modell

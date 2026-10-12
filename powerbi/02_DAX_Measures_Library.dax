@@ -262,3 +262,141 @@ VAR Avvik = [Avvik YTD]
 RETURN
     IF(Avvik > 50000, "🚩 Overforbruk", "✓ Under ramme")
 
+
+// ------------------------------------------------------------------------------
+// 8. LOVPÅLAGTE KOSTRA-NØKKELTALL & BYSTYRETS HANDLINGSREGLER
+// ------------------------------------------------------------------------------
+// Hjemmel: Kommuneloven § 14-9, SSB KOSTRA-standard og Bystyrets HØP 2026-2029
+
+[Brutto Driftsresultat] = 
+VAR Driftsinntekter = 
+    CALCULATE(
+        [Regnskap YTD],
+        Fact_Regnskap[Hovedgruppe] = "3 Inntekter" || Fact_Regnskap[KOSTRA_Art] IN {"1600", "1620", "1650", "1690", "1700", "1770"}
+    )
+VAR Driftsutgifter = 
+    CALCULATE(
+        [Regnskap YTD],
+        Fact_Regnskap[Hovedgruppe] IN {"1 Lønn", "2 Utgifter"} || Fact_Regnskap[KOSTRA_Art] IN {"1010", "1020", "1030", "1040", "1050", "1090", "1110", "1130", "1150", "1200", "1270"}
+    )
+RETURN
+    Driftsinntekter - Driftsutgifter
+/* Formel: Brutto driftsinntekter fratrukket brutto driftsutgifter */
+
+
+[Brutto Driftsresultat %] = 
+VAR TotaleInntekter = 
+    CALCULATE(
+        [Regnskap YTD],
+        Fact_Regnskap[Hovedgruppe] = "3 Inntekter" || Fact_Regnskap[KOSTRA_Art] IN {"1600", "1620", "1650", "1690", "1700", "1770"}
+    )
+RETURN
+    DIVIDE([Brutto Driftsresultat], ABS(TotaleInntekter), 0)
+/* Handlingsregel Kristiansand kommune: Mål om minimum 1,7 % over tid */
+
+
+[Korrigert Netto Driftsresultat] = 
+VAR BruttoRes = [Brutto Driftsresultat]
+VAR FinansPoster = 
+    CALCULATE(
+        [Regnskap YTD],
+        Fact_Regnskap[Undergruppe] IN {"15 Finansutgifter", "19 Finansinntekter"}
+    )
+VAR Fondstrakninger = 
+    CALCULATE(
+        [Regnskap YTD],
+        Fact_Regnskap[Undergruppe] IN {"15 Avsetninger", "19 Bruk av fond"}
+    )
+RETURN
+    BruttoRes + FinansPoster + Fondstrakninger
+/* Målsetting jf. 1. tertialrapport 2026: >= 1,0 % */
+
+
+[Korrigert Netto Driftsresultat %] = 
+VAR TotaleInntekter = 
+    CALCULATE(
+        [Regnskap YTD],
+        Fact_Regnskap[Hovedgruppe] = "3 Inntekter" || Fact_Regnskap[KOSTRA_Art] IN {"1600", "1620", "1650", "1690", "1700", "1770"}
+    )
+RETURN
+    DIVIDE([Korrigert Netto Driftsresultat], ABS(TotaleInntekter), 0)
+
+
+[Disposisjonsfond Grad %] = 
+VAR DisposisjonsfondSaldo = 
+    CALCULATE(
+        SUM(Fact_Regnskap[Regnskap]),
+        Fact_Regnskap[Kontoklasse] = "Balanse" || Fact_Regnskap[Undergruppe] = "2.80 Disposisjonsfond"
+    )
+VAR TotaleInntekter = 
+    CALCULATE(
+        [Regnskap YTD],
+        Fact_Regnskap[Hovedgruppe] = "3 Inntekter" || Fact_Regnskap[KOSTRA_Art] IN {"1600", "1620", "1650", "1690", "1700", "1770"}
+    )
+RETURN
+    DIVIDE(ABS(DisposisjonsfondSaldo), ABS(TotaleInntekter), 0)
+/* Bufferkapital: Mål >= 5,0 % av brutto driftsinntekter */
+
+
+// ------------------------------------------------------------------------------
+// 9. TIME INTELLIGENCE & FJORÅRSAMMENLIGNING (YoY)
+// ------------------------------------------------------------------------------
+
+[Regnskap PY YTD] = 
+CALCULATE(
+    [Regnskap YTD],
+    SAMEPERIODLASTYEAR(Dim_Dato[full_dato])
+)
+/* Sammenligning med tilsvarende periode foregående regnskapsår */
+
+
+[Endring YoY Kr] = 
+[Regnskap YTD] - [Regnskap PY YTD]
+
+
+[Endring YoY %] = 
+DIVIDE([Endring YoY Kr], ABS([Regnskap PY YTD]), 0)
+
+
+// ------------------------------------------------------------------------------
+// 10. HIERARKI DRILL-DOWN & DYNAMISK KONTEKSTDETEKSJON (ISINSCOPE)
+// ------------------------------------------------------------------------------
+
+[Aktiv Hierarki Kontekst] = 
+SWITCH(
+    TRUE(),
+    ISINSCOPE(Dim_Art[art_navn]), "Detaljert Konto / Art",
+    ISINSCOPE(Dim_Funksjon[funksjon_navn]), "KOSTRA Funksjon",
+    ISINSCOPE(Dim_Ansvar[virksomhet_navn]), "Virksomhet / Enhet",
+    ISINSCOPE(Dim_Ansvar[kommunalsjefomrade]), "Kommunalsjefområde / Sektor",
+    "Kommunenivå (Totalt)"
+)
+
+[Smart Avviksvisning] = 
+IF(
+    ISINSCOPE(Dim_Art[art_navn]),
+    FORMAT([Avvik YTD], "#,##0 kr;(#,##0 kr);"-""),
+    FORMAT([Avvik YTD], "#,##0 kr;(#,##0 kr);"-"") & " (" & FORMAT([Avvik YTD %], "0.0 %") & ")"
+)
+
+[Avvik Status Farge] = 
+VAR AvvikPct = [Avvik YTD %]
+VAR VesentlighetsGrense = 0.05 -- 5 % terskel jf. Økonomireglementet
+RETURN
+    SWITCH(
+        TRUE(),
+        AvvikPct > VesentlighetsGrense, "#D9534F", -- Rød (Alvorlig merforbruk)
+        AvvikPct > 0.02, "#F0AD4E",                 -- Gul (Moderat merforbruk)
+        AvvikPct < -VesentlighetsGrense, "#337AB7", -- Blå (Mindreforbruk)
+        "#5CB85C"                                   -- Grønn (I henhold til budsjett)
+    )
+
+
+// ------------------------------------------------------------------------------
+// 11. ROW-LEVEL SECURITY (RLS) FOR ENHETSLEDERE OG SEKTORSJEFER
+// ------------------------------------------------------------------------------
+// Implementeres som DAX filteruttrykk på tabellen Dim_Ansvar:
+// [Leder_Epost] = USERPRINCIPALNAME() ||
+// LOOKUPVALUE(Dim_Ansvar[Sektorsjef_Epost], Dim_Ansvar[Sektorsjef_Epost], USERPRINCIPALNAME()) = USERPRINCIPALNAME()
+
+

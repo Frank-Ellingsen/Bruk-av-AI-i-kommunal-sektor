@@ -127,3 +127,16 @@ Rapporten bygges med 4 dedikerte sider med maksimalt data-ink ratio (ingen 3D, i
   * Kolonner: `Tidsstempel`, `Enhetskode`, `AI Tiltak`, `Konfidens`, `Leder Beslutning`, `Saksbehandler`, `Begrunnelse`.
   * Demonstrerer etterlevelse av **Kommuneloven § 14-5** og **EU AI Act**.
 
+---
+
+## 4. KOSTRA Lovpålagte Nøkkeltall & Handlingsregler
+
+For offisiell rapportering og bystyrenivå integrerer modellen lovpålagte KOSTRA-nøkkeltall (jf. [docs/dax_kostra_kpi_package.md](file:///c:/Users/frank/Desktop/KrsKom/use%20cases/docs/dax_kostra_kpi_package.md) og [powerbi/04_KOSTRA_DAX_KPI_Package.dax](file:///c:/Users/frank/Desktop/KrsKom/use%20cases/powerbi/04_KOSTRA_DAX_KPI_Package.dax)):
+
+* **Brutto Driftsresultat %:** Minimum 1,7 % over tid (Handlingsregel Kristiansand kommune).
+* **Korrigert Netto Driftsresultat %:** Minimum 1,0 % jf. 1. tertialrapport 2026.
+* **Disposisjonsfond Grad %:** Minimum 5,0 % bufferkapital av brutto driftsinntekter.
+* **Gjeldstak / Nettogjeld:** Maksimalt 8,8 mrd. kr (Bystyrevedtak HØP 2026–2029).
+* **Vesentlighetsterskel:** > 5,0 % eller 500' kr utløser krav om tiltak og rapportering jf. Økonomireglementet § 4.
+
+

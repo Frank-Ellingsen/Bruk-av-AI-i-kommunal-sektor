@@ -66,3 +66,11 @@ SWITCH(
 - Push sign-inversion, string concatenation, and surrogate key mapping upstream to ETL/Power Query (Query Folding).
 - Never use row-by-row iteration (`FILTER(ALL(...))`) when set-based aggregations work.
 - Use explicit `DIVIDE(numerator, denominator, 0)` for all percentage measures.
+
+---
+
+## 5. Official KOSTRA Statutory KPI Library
+- **Fullstendig DAX-spesifikasjon:** [docs/dax_kostra_kpi_package.md](file:///c:/Users/frank/Desktop/KrsKom/use%20cases/docs/dax_kostra_kpi_package.md)
+- **Produksjonsklare DAX-mål:** [powerbi/02_DAX_Measures_Library.dax](file:///c:/Users/frank/Desktop/KrsKom/use%20cases/powerbi/02_DAX_Measures_Library.dax) og [powerbi/04_KOSTRA_DAX_KPI_Package.dax](file:///c:/Users/frank/Desktop/KrsKom/use%20cases/powerbi/04_KOSTRA_DAX_KPI_Package.dax)
+- **Kommunale Nøkkeltall:** Brutto driftsresultat % (mål >= 1,7 %), Korrigert netto driftsresultat % (mål >= 1,0 %), Disposisjonsfond grad % (mål >= 5,0 %), og RLS for enhetsledere / sektorsjefer.
+
