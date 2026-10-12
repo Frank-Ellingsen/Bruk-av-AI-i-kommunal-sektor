@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 ===============================================================================
 KRISTIANSAND KOMMUNE - GENERATOR FOR EPM OG FRAMSIKT GRAFER
@@ -20,7 +19,10 @@ if hasattr(sys.stdout, "reconfigure"):
 import matplotlib.pyplot as plt
 import numpy as np
 
-from config import REPORTS_DIR
+try:
+    from config import REPORTS_DIR
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from src.config import REPORTS_DIR
 
 # Konfigurer matplotlib for headless og UTF-8
 plt.rcParams['font.sans-serif'] = 'DejaVu Sans'
@@ -31,14 +33,13 @@ plt.rcParams['grid.linestyle'] = '--'
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent if BASE_DIR.name in ["src", "powerbi"] else BASE_DIR
-REPORTS_DIR = REPORTS_DIR
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
 def generate_charts():
     # -------------------------------------------------------------------------
     # 1. BOMILJØ: MÅNEDLIG UTVIKLING OG TILTROSKORRIDOR (Jan - Des)
     # -------------------------------------------------------------------------
-    fig, ax = plt.subplots(figsize=(10, 4.5), dpi=300)
+    _, ax = plt.subplots(figsize=(10, 4.5), dpi=300)
     
     months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Des']
     budget = [1.40, 1.41, 1.34, 2.36, 1.54, 0.24, 1.51, 1.53, 1.50, 1.42, 1.42, 1.55] # mill kr
@@ -56,7 +57,7 @@ def generate_charts():
     
     # Februaranomali markering
     ax.annotate('Februarsjokk: Vikarbølge\nog overtid (2,08 mill)', xy=(1, 2.08), xytext=(1.2, 2.25),
-                arrowprops=dict(facecolor='#DC2626', shrink=0.08, width=1, headwidth=5),
+                arrowprops={"facecolor": '#DC2626', "shrink": 0.08, "width": 1, "headwidth": 5},
                 fontsize=8, fontweight='bold', color='#DC2626')
 
     # Run-rate fremskriving uten tiltak
@@ -89,7 +90,7 @@ def generate_charts():
     # -------------------------------------------------------------------------
     # 2. KOMSKOLE: HORISONTALE AVVIK PER ENHET (Inspirert av skole1 / skole2)
     # -------------------------------------------------------------------------
-    fig, ax = plt.subplots(figsize=(10, 4.5), dpi=300)
+    _, ax = plt.subplots(figsize=(10, 4.5), dpi=300)
     
     units = [
         'Ordinær undervisning',
@@ -139,7 +140,7 @@ def generate_charts():
     # -------------------------------------------------------------------------
     # 3. KONSOLIDERT VANNFALLSDIAGRAM TIL NET ZERO
     # -------------------------------------------------------------------------
-    fig, ax = plt.subplots(figsize=(10, 4.5), dpi=300)
+    _, ax = plt.subplots(figsize=(10, 4.5), dpi=300)
     
     labels = [
         'Uendret\nRun-Rate',
@@ -151,8 +152,6 @@ def generate_charts():
         'Målresultat\n31.12'
     ]
     # Starter på -3 344 kNOK (merforbruk), henter inn tiltak
-    bottoms = [-3344, -3344, -2344, -1224, -1024, -374, 0]
-    heights = [-3344, 1000, 1120, 200, 650, 374, 0]
     
     # Tilpass stolper
     bar_bottoms = [0, -3344, -2344, -1224, -1024, -374, 0]

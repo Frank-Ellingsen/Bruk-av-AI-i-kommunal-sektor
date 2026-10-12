@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 ===============================================================================
 KRISTIANSAND KOMMUNE - GENERATOR FOR POWERPOINT PRESENTASJON
@@ -11,19 +10,21 @@ med full status, prognoser, tiltak og månedlig tiltakseffekt mot Net Zero EOY.
 ===============================================================================
 """
 
-import sys
 from pathlib import Path
+
 from pptx import Presentation
-from pptx.util import Inches, Pt
-from pptx.enum.text import PP_ALIGN
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import PP_ALIGN
+from pptx.util import Inches, Pt
 
-from config import REPORTS_DIR
+try:
+    from config import REPORTS_DIR
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from src.config import REPORTS_DIR
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent if BASE_DIR.name in ["src", "powerbi"] else BASE_DIR
-REPORTS_DIR = REPORTS_DIR
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 PPTX_PATH = REPORTS_DIR / "Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pptx"
 
@@ -684,7 +685,7 @@ def create_deck():
             p.text = b
             p.font.size = Pt(8.5)
             p.font.color.rgb = COLOR_NAVY if b.startswith("•") else COLOR_MUTED_TEXT
-            p.font.bold = True if b.startswith("•") else False
+            p.font.bold = bool(b.startswith("•"))
             p.space_before = Pt(4)
 
     prs.save(str(PPTX_PATH))

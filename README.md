@@ -118,62 +118,30 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 
 ```text
 .
-├── agents/                     # Spesifikasjoner for de 8 spesialiserte EPM AI-agentene
-│   ├── 01_data_integration_etl_agent.md
-│   ├── 02_bi_dax_modeler_agent.md
-│   ├── 03_predictive_anomaly_agent.md
-│   ├── 04_prescriptive_hitl_agent.md
-│   ├── 05_ethics_governance_gatekeeper_agent.md
-│   ├── 06_executive_report_ghostwriter_agent.md
-│   ├── 07_excel_powerbi_reporting_expert_agent.md
-│   └── 08_multilevel_stakeholder_reporting_agent.md
-├── data/                       # Grunnlagsdata og normaliserte regnskapsfiler
-│   ├── BoMiljø.csv             # Kommunal Boenhet (1 056 rader, 12 mnd)
-│   ├── Komskole.csv            # Kommunal Skole (194 rader)
-│   ├── kostra_kontoplan.csv    # Fullstendig KOSTRA kontoplanhierarki (funksjon & art)
-│   ├── Rapport Enhet Bo og Miljø.xlsx # Framsikt eksportrapport Bo og Miljø
-│   └── Rapport Enhet Skole.xlsx# Framsikt eksportrapport Kommunal Skole
-├── docs/                       # Saksfremlegg, rammeverk og referansedokumenter
-│   ├── antigravity_usecase_epm.md      # Full teknisk og forretningsmessig spesifikasjon
-│   ├── dax_kostra_kpi_package.md       # Full DAX-pakke for KOSTRA & kommunal økonomistyring
-│   ├── epm_full_workflow_documentation.md # End-to-end arkitekturdokumentasjon for EPM AI-agentene
-│   ├── epm_workflow_diagram.png        # Visuelt arbeidsflytdiagram for Kristiansand EPM
-│   ├── saksfremlegg_epm_okonomidirektor.docx
-│   ├── use_case_kristiansand_kommune-v4.docx
-│   └── references/             # Kommunale styringsdokumenter og økonomiplan
-│       ├── 1.-tertialrapport-2026---kristiansand-kommune.pdf
-│       ├── kommunedirektorens-forslag-til-okonomiplan-2027-2030.pdf
-│       ├── okonomireglement-for-kristiansand-kommune.pdf
-│       ├── Nøkkeltall _Kristiansand_Kommune.pdf
-│       └── Rådgiver økonomistyring Kristiansand Kommune - arbeidsplassen.no.pdf
-├── powerbi/                    # Komplett Power BI & Excel Semantic Model-suite
-│   ├── 01_PowerQuery_M_Code.pq         # Power Query ETL (CSV & SQLite kilder)
-│   ├── 02_DAX_Measures_Library.dax     # YTD, EOY Prognose, KOSTRA- og Tufte-mål
-│   ├── 03_PowerBI_Model_Architecture.md# Relasjonsguide, RLS, KOSTRA KPIs & Rapportdesign
-│   ├── 04_KOSTRA_DAX_KPI_Package.dax   # Produksjonsklar DAX-pakke for KOSTRA & handlingsregler
-│   ├── fxOpenAI_RAG.m                  # Power Query M-funksjon for OpenAI RAG-integrasjon
-│   ├── generate_excel_powerbi_model.py # Generator for konsolidert arbeidsbok
-│   ├── Kristiansand_EPM_PowerBI_Model.xlsx # Fullstendig modell for direkte Power BI import
-│   └── projects/                       # Power BI Desktop Developer Projects (.pbip)
-│       ├── Bo og Miljø enhet project.pbip
-│       └── Skole enhet project.pbip
-├── artifacts/                  # Genererte byggresultater og rapporter (ikke kildekode)
-│   ├── reports/                # PDF/PPTX/PNG-rapporter og grafiske outputs
-│   └── kristiansand_golden_record.db # Kanonisk SQLite golden-record datasett
-├── src/                        # Operativ Python-kildekode
-│   ├── build_golden_record.py  # Hoved-ETL (100 % Python Standard Library)
-│   ├── build_excel_epm_model.py# Generator for master Excel EPM-modell
-│   ├── generate_charts.py      # Generator for Tufte-grafer og vannfallsdiagrammer
-│   ├── generate_powerpoint_report.py # Generator for 16:9 executive PowerPoint rapport
-│   ├── generate_pdf_report.py  # Generator for formell ReportLab PDF styringsrapport
-│   ├── epm_agentic_pipeline.py # Multi-agent orkestrering & HITL-logging
-│   └── hitl_writeback_ui.py    # Streamlit Human-in-the-Loop Web-UI med SQLite writeback
-├── hitl_writeback_ui.py        # Snarvei for Streamlit HITL Portal i rotkatalog
-├── Kristiansand_EPM_Excel_Modell.xlsx # Standalone master Excel-modell med dashboards & Tufte-styling
-├── .gitignore
-├── requirements.txt
+├── .agent/skills/              # Agentinstruksjoner brukt av verktøyene i arbeidsområdet
+├── agents/                     # Beskrivende spesifikasjoner for de åtte EPM-agentene
+├── data/                       # Inndata og kildedokumenter for den aktive pipelinen
+├── docs/                       # Teknisk dokumentasjon, vedlegg og referansemateriale
+├── artifacts/                  # Lokale, genererte resultater (ignoreres av Git)
+│   ├── kristiansand_golden_record.db
+│   └── reports/                # Genererte rapporter og diagrammer
+├── reports/                    # Sjekkede rapport-/arbeidsbok-snapshots og eksempelgrafikk
+├── powerbi/                    # DAX/M-kode, arbeidsbok og Power BI Desktop-prosjekter
+├── src/                        # Python-kildekode for ETL, UI og rapportgeneratorer
+├── tests/                      # Automatiserte tester
+├── kristiansand_epm_rammeverk_norsk/ # Separat norsk rammeverkssnapshot med egen README
+├── run_pipeline.py             # CLI for ETL og HITL-grensesnitt
+├── hitl_writeback_ui.py        # Kompatibel snarvei til Streamlit-grensesnittet i src/
+├── smoke_test.py               # Manuell databasekontroll
+├── pyproject.toml              # Prosjektmetadata, avhengigheter og testoppsett
 └── README.md
 ```
+
+`artifacts/` er standard mål for nye resultater. `reports/` og arbeidsboken i
+rotkatalogen er eksisterende, sjekkede leveranser og oppdateres ikke automatisk
+av generatorene. Den separate `kristiansand_epm_rammeverk_norsk/`-mappen
+inneholder overlappende eksempelmateriale; den aktive kjørbare pipelinen bruker
+rotkatalogens `src/`, `data/` og `artifacts/`.
 
 ---
 
@@ -182,12 +150,17 @@ Rapportene og spørringene er bygget etter Edward Tuftes **Data-Ink Ratio**:
 ### Forutsetninger
 * Python 3.10 eller nyere.
 * Core ETL har **null eksterne avhengigheter** (benytter utelukkende Pythons innebygde standardbibliotek: `sqlite3`, `csv`, `hashlib`, `pathlib`).
+* UI, rapportgeneratorer og Excel-modellbygger krever prosjektavhengighetene.
 
 ### 0. Konfigurer miljøet
 ```bash
+python -m pip install -e .
 cp .env.example .env
 ```
-Dette setter opp standardstier for kildekatalog og genererte artefakter. Standardmodellen lagrer den kanoniske SQLite-databasen i `artifacts/kristiansand_golden_record.db` og rapporter i `artifacts/reports/`.
+Installer utviklingsavhengigheter og tester med `python -m pip install -e ".[dev]"`.
+`.env` setter opp standardstier for kildedata og genererte artefakter.
+Standardmodellen lagrer databasen i `artifacts/kristiansand_golden_record.db`
+og rapporter i `artifacts/reports/`.
 
 ### 1. Bygg Golden Record SQLite-databasen
 ```bash
@@ -222,11 +195,13 @@ Dette bygger databasen og starter deretter HITL-portalen i samme operasjon.
 python src/generate_charts.py
 python src/generate_powerpoint_report.py
 python src/generate_pdf_report.py
+python src/build_excel_epm_model.py
 ```
 Produserer automatisk:
-* `reports/Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pptx` (10 lysbilder)
-* `reports/Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pdf` (6 sider A4 liggende)
-* Høyoppløselige visualiseringer i `reports/*.png`.
+* `artifacts/reports/Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pptx` (10 lysbilder)
+* `artifacts/reports/Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pdf` (6 sider A4 liggende)
+* Høyoppløselige visualiseringer i `artifacts/reports/*.png`.
+* `artifacts/Kristiansand_EPM_Excel_Modell.xlsx`.
 
 
 ---

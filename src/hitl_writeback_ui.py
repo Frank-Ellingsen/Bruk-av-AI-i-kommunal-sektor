@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 ============================================================================
 KRISTIANSAND KOMMUNE - HUMAN-IN-THE-LOOP (HITL) WRITE-BACK UI
@@ -6,13 +7,16 @@ Stack: Streamlit + SQLite Golden Record (kristiansand_golden_record.db)
 ============================================================================
 """
 
-import sqlite3
 import datetime
-import json
+import sqlite3
+
 import pandas as pd
 import streamlit as st
 
-from config import DB_PATH
+try:
+    from config import DB_PATH
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from src.config import DB_PATH
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
@@ -58,8 +62,8 @@ def main():
     # Sidebar: User Authentication Context
     st.sidebar.header("👤 Saksbehandler Identitet")
     user_name = st.sidebar.text_input("Saksbehandler / Rådgiver", "Frank Ellingsen")
-    user_role = st.sidebar.selectbox("Rolle / Fullmakt", ["Rådgiver Økonomi", "Enhetsleder Skole", "Enhetsleder Boenhet", "Kommunalsjef"])
-    sektor_select = st.sidebar.selectbox("Sektor", ["Oppvekst", "Helse og mestring", "By- og stedsutvikling"])
+    st.sidebar.selectbox("Rolle / Fullmakt", ["Rådgiver Økonomi", "Enhetsleder Skole", "Enhetsleder Boenhet", "Kommunalsjef"])
+    st.sidebar.selectbox("Sektor", ["Oppvekst", "Helse og mestring", "By- og stedsutvikling"])
 
     # Section 1: Active Variance Case Review
     st.subheader("1. Velg Registrert Avvikssak for AI-Diagnose")

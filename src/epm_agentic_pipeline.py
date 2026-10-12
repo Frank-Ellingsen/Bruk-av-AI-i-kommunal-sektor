@@ -9,19 +9,20 @@ og Human-in-the-Loop (HITL) audit-logging.
 Inneholder integrasjonsoppsett for både CrewAI og Microsoft AutoGen.
 """
 
-import os
-import sys
-import sqlite3
 import hashlib
+import sqlite3
+import sys
 from datetime import datetime
 from pathlib import Path
-import pandas as pd
 
 # Sikre UTF-8 output på Windows-konsoll
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-from config import DB_PATH
+try:
+    from config import DB_PATH
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from src.config import DB_PATH
 
 # Path-konfigurasjoner
 BASE_DIR = Path(__file__).resolve().parent

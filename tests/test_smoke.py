@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_gold_record_builds() -> None:
     subprocess.run([sys.executable, "src/build_golden_record.py"], cwd=str(ROOT), check=True)
+    subprocess.run([sys.executable, "src/build_golden_record.py", "--keep-existing"], cwd=str(ROOT), check=True)
 
     assert DB_PATH.exists(), f"Expected database at {DB_PATH}"
 

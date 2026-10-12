@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 ===============================================================================
 KRISTIANSAND KOMMUNE - EPM GOLDEN RECORD ETL PIPELINE
@@ -13,15 +12,17 @@ for Kristiansand kommune:
 ===============================================================================
 """
 
-import os
-import sys
+import argparse
 import csv
 import hashlib
 import sqlite3
-import datetime
+import sys
 from pathlib import Path
 
-from config import DB_PATH, DATA_DIR
+try:
+    from config import DATA_DIR, DB_PATH
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from src.config import DATA_DIR, DB_PATH
 
 # Sikre UTF-8 output på Windows-konsoll
 if hasattr(sys.stdout, "reconfigure"):
@@ -39,6 +40,22 @@ def find_data_file(filename):
 
 BOMILJO_CSV = find_data_file("BoMiljø.csv")
 KOMSKOLE_CSV = find_data_file("Komskole.csv")
+
+
+def parse_decimal(value, default=0.0):
+    """Normalize localized numeric strings to a float."""
+    if value is None:
+        return default
+    text = str(value).strip()
+    if not text:
+        return default
+    text = text.replace(" ", "")
+    if "," in text and "." in text:
+        text = text.replace(".", "").replace(",", ".")
+    elif "," in text:
+        text = text.replace(",", ".")
+    return float(text)
+
 
 def get_hash(*args):
     """Generer deterministisk SHA-256 hash for transaksjonen."""
@@ -252,19 +269,18 @@ def load_bomiljo(conn):
     cur.execute("SELECT ansvar_key FROM Dim_Ansvar WHERE ansvar_kode = '2540'")
     ansvar_key = cur.fetchone()[0]
 
+    rows_to_insert = []
     inserted = 0
     with open(BOMILJO_CSV, 'r', encoding='utf-8-sig') as f:
         reader = csv.DictReader(f)
         for row in reader:
             m_num = int(row['Måned_Nr'])
             d_key = 20240000 + m_num * 100 + 1
-            
+
             art_kode = row['KOSTRA_Art']
             konto = row['Kontokode']
-            kontonavn = row['Kontonavn']
             hoved = row['Hovedgruppe']
-            
-            # Bestem fortegn og gruppe
+
             if 'Inntekt' in hoved or 'Refusjon' in row['Undergruppe']:
                 gruppe = 'Refusjon'
                 sign = -1
@@ -274,22 +290,22 @@ def load_bomiljo(conn):
             else:
                 gruppe = 'Drift'
                 sign = 1
-            
+
             art_key = get_or_create_art(conn, art_kode, f"{art_kode} {row['Undergruppe']}", gruppe, sign)
-            
-            belop = float(row['Regnskap'])
-            budsjett = float(row['Budsjett'])
+            belop = parse_decimal(row['Regnskap'])
+            budsjett = parse_decimal(row['Budsjett'])
             korrigert = belop * sign
-            
             tx_id = get_hash("BOOM", "2540", konto, d_key)
-            
-            cur.execute("""
-                INSERT OR REPLACE INTO Fact_Regnskap (
-                    transaksjon_id, kilde_system, funksjon_key, art_key, ansvar_key,
-                    dato_key, belop, korrigert_belop, budsjett_belop
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (tx_id, "Visma Enterprise (BOOM)", funksjon_key, art_key, ansvar_key, d_key, belop, korrigert, budsjett))
+            rows_to_insert.append((tx_id, "Visma Enterprise (BOOM)", funksjon_key, art_key, ansvar_key, d_key, belop, korrigert, budsjett))
             inserted += 1
+
+    if rows_to_insert:
+        cur.executemany("""
+            INSERT OR REPLACE INTO Fact_Regnskap (
+                transaksjon_id, kilde_system, funksjon_key, art_key, ansvar_key,
+                dato_key, belop, korrigert_belop, budsjett_belop
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, rows_to_insert)
 
     conn.commit()
     print(f"✓ BoMiljø.csv lastet: {inserted} rader inn i Fact_Regnskap.")
@@ -297,8 +313,8 @@ def load_bomiljo(conn):
 def load_komskole(conn):
     """Laster inn data fra Komskole.csv (Kommunal Skole)."""
     cur = conn.cursor()
-    d_key = 20250801 # Aug-25
-    
+    d_key = 20250801  # Aug-25
+
     loc_ansvar_map = {
         'Kommunal Skole': '2020',
         'SFO-avdelingene (Lislehylen, Storehylen)': '2021',
@@ -310,45 +326,45 @@ def load_komskole(conn):
         'Interkommunal eller lokal PPT-enhet': '2029'
     }
 
+    rows_to_insert = []
     inserted = 0
     with open(KOMSKOLE_CSV, 'r', encoding='latin-1') as f:
-        rows = list(csv.reader(f))[3:] # Skip 3 header rows
+        rows = list(csv.reader(f))[3:]  # Skip 3 header rows
         for r in rows:
             if len(r) < 12 or not r[4]:
                 continue
-            
+
             loc = r[4].strip()
             funksjonskode = r[5].strip()
             kontotype = r[7].strip()
             post = r[8].strip()
-            
-            # Beløpene i Komskole er i 1 000 kr -> multipliser med 1 000 for standardisering
-            regn = float(r[9].replace(' ', '').replace(',', '.') or 0) * 1000.0
-            bud = float(r[10].replace(' ', '').replace(',', '.') or 0) * 1000.0
-            
-            # Finn eller opprett funksjon
+
+            regn = parse_decimal(r[9]) * 1000.0
+            bud = parse_decimal(r[10]) * 1000.0
+
             cur.execute("SELECT funksjon_key FROM Dim_Funksjon WHERE funksjon_kode = ?", (funksjonskode,))
             row_f = cur.fetchone()
-            if row_f:
-                f_key = row_f[0]
-            else:
-                f_key = 1 # Fallback Grunnskole
-                
-            # Finn ansvar
+            f_key = row_f[0] if row_f else 1
+
             ansvar_kode = loc_ansvar_map.get(loc, '2020')
             cur.execute("SELECT ansvar_key FROM Dim_Ansvar WHERE ansvar_kode = ?", (ansvar_kode,))
             ans_key = cur.fetchone()[0]
 
-            # Kartlegg art
             if 'Lønn' in kontotype:
                 art_gruppe = 'Personal'
                 sign = 1
-                if 'Fast' in post: art_kode = '1010'
-                elif 'vikar' in post.lower(): art_kode = '1020'
-                elif 'ekstra' in post.lower(): art_kode = '1030'
-                elif 'overtid' in post.lower(): art_kode = '1040'
-                elif 'pensjon' in post.lower() or 'arbeidsgiveravgift' in post.lower(): art_kode = '1090'
-                else: art_kode = '1050'
+                if 'Fast' in post:
+                    art_kode = '1010'
+                elif 'vikar' in post.lower():
+                    art_kode = '1020'
+                elif 'ekstra' in post.lower():
+                    art_kode = '1030'
+                elif 'overtid' in post.lower():
+                    art_kode = '1040'
+                elif 'pensjon' in post.lower() or 'arbeidsgiveravgift' in post.lower():
+                    art_kode = '1090'
+                else:
+                    art_kode = '1050'
             elif 'Refusjon' in kontotype:
                 art_gruppe = 'Refusjon'
                 sign = -1
@@ -356,24 +372,30 @@ def load_komskole(conn):
             else:
                 art_gruppe = 'Drift'
                 sign = 1
-                if 'Materiell' in post or 'materiell' in post.lower(): art_kode = '1110'
-                elif 'Inventar' in post: art_kode = '1200'
-                elif 'Kjøp fra' in post: art_kode = '1270'
-                elif 'Telefon' in post or 'IKT' in post: art_kode = '1130'
-                else: art_kode = '1150'
-                
+                if 'Materiell' in post or 'materiell' in post.lower():
+                    art_kode = '1110'
+                elif 'Inventar' in post:
+                    art_kode = '1200'
+                elif 'Kjøp fra' in post:
+                    art_kode = '1270'
+                elif 'Telefon' in post or 'IKT' in post:
+                    art_kode = '1130'
+                else:
+                    art_kode = '1150'
+
             art_key = get_or_create_art(conn, art_kode, f"{art_kode} {post}", art_gruppe, sign)
             korrigert = regn * sign
-            
             tx_id = get_hash("KOMSKOLE", ansvar_kode, post, d_key, inserted)
-            
-            cur.execute("""
-                INSERT OR REPLACE INTO Fact_Regnskap (
-                    transaksjon_id, kilde_system, funksjon_key, art_key, ansvar_key,
-                    dato_key, belop, korrigert_belop, budsjett_belop
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (tx_id, "Framsikt / Visma (Skole)", f_key, art_key, ans_key, d_key, regn, korrigert, bud))
+            rows_to_insert.append((tx_id, "Framsikt / Visma (Skole)", f_key, art_key, ans_key, d_key, regn, korrigert, bud))
             inserted += 1
+
+    if rows_to_insert:
+        cur.executemany("""
+            INSERT OR REPLACE INTO Fact_Regnskap (
+                transaksjon_id, kilde_system, funksjon_key, art_key, ansvar_key,
+                dato_key, belop, korrigert_belop, budsjett_belop
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, rows_to_insert)
 
     conn.commit()
     print(f"✓ Komskole.csv lastet: {inserted} rader inn i Fact_Regnskap.")
@@ -447,17 +469,18 @@ def verify_database(conn):
         ORDER BY da.ansvar_navn
     """)
     for row in cur.fetchall():
-        navn, funk, cnt, bud, regn, avv = row
+        navn, _funk, cnt, bud, regn, avv = row
         print(f"{navn[:32]:<32} | Bud: {bud:>12,.0f} | Regn: {regn:>12,.0f} | Avvik: {avv:>11,.0f}")
 
     print("="*70)
 
-def main():
+def build_golden_record(rebuild: bool = True) -> None:
+    """Build or refresh the Golden Record database in an idempotent way."""
     print("Starter etablering av Kristiansand Golden Record...")
-    if DB_PATH.exists():
+    if rebuild and DB_PATH.exists():
         DB_PATH.unlink()
         print("Eksisterende database fjernet for ren gjenoppbygging.")
-        
+
     conn = sqlite3.connect(DB_PATH)
     try:
         create_schema(conn)
@@ -465,10 +488,22 @@ def main():
         load_bomiljo(conn)
         load_komskole(conn)
         populate_audit_actions(conn)
-        verify_database(conn)
+        if rebuild:
+            verify_database(conn)
     finally:
         conn.close()
     print("\nETL-kjøring fullført! Databasen er klar til bruk.")
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Establish or refresh the Kristiansand Golden Record SQLite database.")
+    parser.add_argument("--rebuild", action="store_true", help="Delete the existing database before rebuilding it.")
+    parser.add_argument("--keep-existing", action="store_true", help="Reuse the current database and only insert missing data.")
+    args = parser.parse_args(argv)
+
+    rebuild = args.rebuild or not args.keep_existing
+    build_golden_record(rebuild=rebuild)
+
 
 if __name__ == "__main__":
     main()

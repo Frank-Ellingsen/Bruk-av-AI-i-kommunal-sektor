@@ -1,13 +1,13 @@
+#!/usr/bin/env python3
 # ==============================================================================
 # KRISTIANSAND KOMMUNE -- EPM ETL PIPELINE WITH FRAMSIKT INTEGRATION
 # Ingests Vedtatt Budsjett, Budsjettendringer, Deflator, and Visma Regnskap
 # Author: Rådgiver Økonomistyring (Frank Ellingsen)
 # ==============================================================================
 
-import os
-import sys
-import sqlite3
 import datetime
+import sqlite3
+import sys
 from pathlib import Path
 
 if hasattr(sys.stdout, "reconfigure"):

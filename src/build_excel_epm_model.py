@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 ===============================================================================
 KRISTIANSAND KOMMUNE - ENTERPRISE EXCEL EPM DATAMODELL & STYRINGSVERKTØY
@@ -14,15 +13,19 @@ Bygger en komplett, produksjonsklar Excel-arbeidsbok:
 ===============================================================================
 """
 
-import sys
 import sqlite3
+import sys
 from pathlib import Path
+
 import openpyxl
-from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.table import Table, TableStyleInfo
 
-from config import ARTIFACTS_DIR, DB_PATH
+try:
+    from config import ARTIFACTS_DIR, DB_PATH
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from src.config import ARTIFACTS_DIR, DB_PATH
 
 # Sikre UTF-8 output
 if hasattr(sys.stdout, "reconfigure"):

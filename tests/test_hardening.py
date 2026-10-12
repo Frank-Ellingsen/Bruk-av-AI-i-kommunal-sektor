@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from pathlib import Path
 
 from src.config import ARTIFACTS_DIR, DB_PATH, REPORTS_DIR

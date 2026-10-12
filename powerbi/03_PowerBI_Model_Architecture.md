@@ -139,4 +139,31 @@ For offisiell rapportering og bystyrenivå integrerer modellen lovpålagte KOSTR
 * **Gjeldstak / Nettogjeld:** Maksimalt 8,8 mrd. kr (Bystyrevedtak HØP 2026–2029).
 * **Vesentlighetsterskel:** > 5,0 % eller 500' kr utløser krav om tiltak og rapportering jf. Økonomireglementet § 4.
 
+---
 
+## 5. Implementerte prosjektartefakter og databegrensninger
+
+De to PBIP-prosjektene bruker et felles stjerneskjemamønster med `Fact_Regnskap`,
+`Dim_Dato`, `Dim_Ansvar`, `Dim_Funksjon` og `Dim_Art`. Rapportene har sidene
+**Resultatoversikt**, **Avviksdrivere**, **Prognose og tiltak** og **Ansvarlig AI og
+audit trail**. Audit-tabellen har skjema og RLS-relasjon, men er tom frem til den
+faktiske audit-kilden kobles inn. Hva-hvis-sidene
+har fravelgbare deflatorverdier fra 2,0–6,0 % og fraværstiltak fra 0,0–3,0 %;
+standardverdiene er henholdsvis 4,1 % og 1,5 %.
+
+Før første dataoppdatering må Power BI-parameteren `DataRoot` settes til den lokale
+`data`-mappen, med avsluttende `\`. RLS-rollene må tildeles brukere eller grupper i
+Power BI-tjenesten etter publisering.
+
+Rapportene begrenser YTD-målene til og med august, i tråd med T2-spesifikasjonen.
+Kildene har likevel ulik dekning: Bo og Miljø-filen inneholder 2024-data med bokførte
+måneder januar–august og budsjett for resten av året, mens Skole-filen er et
+YTD-snapshot fra august 2025 uten månedlig historikk. Skole-rapporten viser derfor
+snapshot og kontodrivere, ikke en oppdiktet månedlig prognosetrend.
+
+Excel-arbeidsbøkene inneholder oversikt, datagrunnlag, KPI-matrise, kontodrivere,
+measure-oversikt og redigerbare terskler for RAG-formatering. Tabellfiltrering,
+data bars og ikonsett er brukt som innebygde Excel-komponenter. De genererte
+arbeidsbøkene inneholder ikke PivotTable-baserte slicere; slike funksjoner krever
+Pivot-cache. Tilsvarende må disposisjonsfond, korrigert netto driftsresultat
+og ERP-etterslep kobles til kildedata før de kan rapporteres som faktiske KPI-er.

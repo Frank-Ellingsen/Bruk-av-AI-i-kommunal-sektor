@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 ===============================================================================
 KRISTIANSAND KOMMUNE - GENERATOR FOR KOMPLETT EPM PDF RAPPORT
@@ -17,19 +16,28 @@ from pathlib import Path
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib import colors
-from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, PageBreak, KeepTogether, HRFlowable
-)
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import cm
+from reportlab.platypus import (
+    HRFlowable,
+    Image,
+    PageBreak,
+    Paragraph,
+    SimpleDocTemplate,
+    Spacer,
+    Table,
+    TableStyle,
+)
 
-from config import REPORTS_DIR
+try:
+    from config import REPORTS_DIR
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from src.config import REPORTS_DIR
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent if BASE_DIR.name in ["src", "powerbi"] else BASE_DIR
-REPORTS_DIR = REPORTS_DIR
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 PDF_PATH = REPORTS_DIR / "Kristiansand_EPM_Status_Prognose_Tiltaksrapport.pdf"
 
@@ -104,7 +112,7 @@ def build_pdf():
         leading=11.5,
         textColor=C_DARK
     )
-    style_body_bold = ParagraphStyle(
+    ParagraphStyle(
         'BodyBold',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
