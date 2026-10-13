@@ -12,6 +12,7 @@ PROJECT_ROOT = PILOT_DIR.parent
 # Excel-filreferanser
 EXCEL_SOURCE = PROJECT_ROOT / "Mini_case_AI_kommunal_okonomistyring.xlsx"
 EXCEL_OUTPUT = PILOT_DIR / "Mini_case_AI_kommunal_okonomistyring_oppdatert.xlsx"
+EXCEL_RAPPORT_BO_MILJO = PILOT_DIR / "Rapport Enhet Bo og Miljø.xlsx"
 
 # Databaser (lokal SQLite & DuckDB)
 DB_SQLITE = PILOT_DIR / "mvp_pilot.db"

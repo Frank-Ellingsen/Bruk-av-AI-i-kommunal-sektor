@@ -18,7 +18,7 @@ import pandas as pd
 import sqlite3
 
 # Importer lokale pilot-moduler
-from config import EXCEL_SOURCE, DB_SQLITE, DB_DUCKDB, DEFAULT_ENHET_NAVN, DEFAULT_KOSTRA_FUNKSJON, DEFAULT_SAKSBEHANDLER, OLLAMA_BASE_URL
+from config import EXCEL_SOURCE, EXCEL_RAPPORT_BO_MILJO, DB_SQLITE, DB_DUCKDB, DEFAULT_ENHET_NAVN, DEFAULT_KOSTRA_FUNKSJON, DEFAULT_SAKSBEHANDLER, OLLAMA_BASE_URL
 from etl import ingest_excel_to_databases
 
 # Selvreparerende sjekk: hvis databasen ikke finnes, kjør ETL automatisk
@@ -57,7 +57,7 @@ st.markdown("""
 
 # Tittel og kontekst
 st.title("Kristiansand EPM · AI-Pilot: Bo og Miljø")
-st.caption(f"Enhet: {DEFAULT_ENHET_NAVN} (KOSTRA funksjon {DEFAULT_KOSTRA_FUNKSJON}) | Kilde: {EXCEL_SOURCE.name}")
+st.caption(f"Enhet: {DEFAULT_ENHET_NAVN} (KOSTRA funksjon {DEFAULT_KOSTRA_FUNKSJON}) | Excel-rapporter: {EXCEL_RAPPORT_BO_MILJO.name} & {EXCEL_SOURCE.name}")
 
 # Last data
 forecast_data = compute_eac_forecasts()

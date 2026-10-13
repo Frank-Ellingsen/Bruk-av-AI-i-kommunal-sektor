@@ -1,6 +1,6 @@
 # Økonomisk Styringsnotat · Bo og Miljø (T2/2024)
 **Enhet:** Kommunal Boenhet (Bo og Miljø) (KOSTRA funksjon 254)  
-**Dato:** 12.10.2026 23:08  
+**Dato:** 13.10.2026 09:43  
 **Ansvarlig Controller:** Frank Ellingsen  
 **Metodikk:** Antigravity EPM · AI-Assistert Preskriptiv Analyse & HITL  
 
@@ -15,9 +15,9 @@
 | **Budsjett YTD** |     11,337,237 | 65,8 % | Periodisert ramme |
 | **Merforbruk YTD** |      1,285,614 | +11.3 % | **RØD (Uakseptabelt)** |
 | **EAC før tiltak (AI Sesong)** |     19,050,223 | -10.5 % | RØD |
-| **Dokumentert godkjent tiltakseffekt** |              0 |  0.0 % av YTD-avvik | Realiserbart |
-| **Revidert EAC etter tiltak** |     19,050,223 | -10.5 % | **GUL / RØD** |
-| **Gjenstående restavvik** |      1,816,532 | -10.5 % | Krever eskalering |
+| **Dokumentert godkjent tiltakseffekt** |         70,195 |  5.5 % av YTD-avvik | Realiserbart |
+| **Revidert EAC etter tiltak** |     18,980,027 | -10.1 % | **GUL / RØD** |
+| **Gjenstående restavvik** |      1,746,336 | -10.1 % | Krever eskalering |
 
 ---
 
@@ -36,7 +36,9 @@ Følgende tiltak er behandlet og vurdert i henhold til Kommuneloven § 14-5 og H
 
 | ID | Tiltaksbeskrivelse | Estimert Effekt | Status | Kontroll | Faglig Begrunnelse / Vedtak |
 | :--- | :--- | ---: | :--- | :--- | :--- |
-| - | Ingen tiltak er formelt godkjent ennå. | 0 kr | Kandidat | Nei | Venter på saksbehandling. |
+| **T3** | Redusere overtid gjennom planlegging |     55,077 kr | Kandidat | Nei | Drøftes videre i turnusutvalg. |
+| **T2** | Redusere unødvendig vikarbruk via intern dekning |     28,872 kr | Godkjent | Ja | Drøftet med tillitsvalgt iht. HTA § 4; vikarstopp på dagtid. |
+| **T1** | Oppfølging refusjoner og inntektskrav |     41,324 kr | Godkjent | Ja | Krav avstemt mot NAV refusjonsportal; 41k bekreftet. |
 
 ---
 
@@ -44,4 +46,4 @@ Følgende tiltak er behandlet og vurdert i henhold til Kommuneloven § 14-5 og H
 
 1. **Godkjenn refusjonsavstemming (T1):** Raskest likviditets- og resultateffekt. Må prioriteres umiddelbart med regnskapsavdelingen.
 2. **Drøft vikarstopp (T2) iht. HTA § 4:** Tillitsvalgte må involveres før turnusjusteringer iverksettes for å unngå brudd på arbeidsmiljøloven.
-3. **Månedlig oppfølging av restavvik:** Restavviket på **1,816,532 kr** overstiger delegert fullmakt for enhetsleder og må varsles kommunalsjefen ved T2-rapporteringen.
+3. **Månedlig oppfølging av restavvik:** Restavviket på **1,746,336 kr** overstiger delegert fullmakt for enhetsleder og må varsles kommunalsjefen ved T2-rapporteringen.
